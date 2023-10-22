@@ -17,6 +17,11 @@
     background-color: var(--color-green-light);
 }
 
+.primary:disabled {
+    pointer-events: none;
+    background-color: var(--color-green-lightest);
+}
+
 .text-wrapper {
     width: 100%;
     text-align: center;

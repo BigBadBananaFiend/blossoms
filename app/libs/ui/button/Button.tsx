@@ -13,7 +13,7 @@ interface IButtonProps {
 }
 
 export const Button: FC<IButtonProps> = (props: IButtonProps) => {
-    const { onClick, isDisabled, text, icon, variant = 'Primary' } = props
+    const { onClick, isDisabled, text, variant = 'Primary' } = props
 
     const atomicClass = classnames({
         [`${style.main}`]: true,
@@ -21,7 +21,11 @@ export const Button: FC<IButtonProps> = (props: IButtonProps) => {
     })
 
     return (
-        <button className={atomicClass} onClick={(e) => onClick?.(e)}>
+        <button
+            disabled={isDisabled}
+            className={atomicClass}
+            onClick={(e) => (isDisabled ? null : onClick?.(e))}
+        >
             <div className={style['text-wrapper']}>{text}</div>
         </button>
     )
