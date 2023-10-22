@@ -1,15 +1,24 @@
-import { Lora, Merriweather } from 'next/font/google'
+import {
+    Alfa_Slab_One,
+    Chivo,
+    Inconsolata,
+    Karla,
+    Lora,
+    Merriweather,
+    Pontano_Sans,
+    Stint_Ultra_Expanded,
+} from 'next/font/google'
 
-export const merriweather = Merriweather({
-    subsets: ['latin'],
-    weight: ['300', '400', '700', '900'],
-    style: ['normal'],
-    variable: '--font-family-heading',
-})
-
-export const lora = Lora({
+export const lora = Inconsolata({
     subsets: ['latin'],
     weight: ['400', '500', '600', '700'],
-    style: ['normal', 'italic'],
+    style: ['normal'],
     variable: '--font-family-body',
+})
+
+export const merriweather = Karla({
+    subsets: ['latin'],
+    weight: ['400'],
+    style: ['normal'],
+    variable: '--font-family-heading',
 })

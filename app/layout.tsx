@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import { lora, merriweather } from './fonts'
 
@@ -15,7 +14,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${merriweather.className} ${lora.className}`}>
+            <body className={`${merriweather.variable} ${lora.variable}`}>
                 {children}
             </body>
         </html>

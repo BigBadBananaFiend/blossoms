@@ -1,8 +1,8 @@
 :root {
-    --color-pink: #fce3e6;
-    --color-brown: #47351e;
-    --color-green: #067c63;
-    --color-red: #e34067;
+    --color-black: #030202;
+    --color-white: #fbfafa;
+    --color-green: #06926a;
+    --color-yellow: #f3c404;
 
     --font-size-caption: 14.4px;
     --font-size-body: 18px;
@@ -26,9 +26,10 @@
 body {
     width: 100vw;
     height: 100vh;
-    background-color: var(--color-pink);
+    background-color: var(--color-black);
     line-height: var(--line-height-body);
     font-family: var(--font-family-body);
+    font-weight: 400;
 }
 
 h1,
@@ -38,9 +39,9 @@ h4,
 h5,
 h6 {
     line-height: var(--line-height-heading);
-    font-weight: 700;
     font-family: var(--font-family-heading);
-    color: var(--color-brown);
+    color: var(--color-white);
+    font-weight: 400;
 }
 
 h1 {
@@ -72,9 +73,21 @@ span {
     line-height: var(--line-height-body);
     font-size: var(--font-size-body);
     font-family: var(--font-family-body);
-    color: var(--color-brown);
+    color: var(--color-white);
 }
 
 .text-small {
     font-size: var(--font-size-caption);
+}
+
+.text-green {
+    color: var(--color-green);
+}
+
+.text-yellow {
+    color: var(--color-yellow);
+}
+
+.text-black {
+    color: var(--color-black);
 }

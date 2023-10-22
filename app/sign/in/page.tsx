@@ -1,8 +1,9 @@
+import SignLayout from '../layout'
+
 export default function In() {
     return (
-        <>
-            <h1>Headline</h1>
-            <span>Body text</span>
-        </>
+        <div>
+            <input placeholder="placeholder"></input>
+        </div>
     )
 }
