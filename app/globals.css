@@ -1,0 +1,18 @@
+:root {
+    --color-pink: #fce3e6;
+    --color-brown: #47351e;
+    --color-green: #067c63;
+    --color-red: #e34067;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-pink);
+}
