@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { ReactNode, useMemo } from 'react'
 import style from './layout.module.css'
-import { Captions } from '../components/Sign/Caption'
+import { Captions } from '@/src/modules/sign/components/Caption'
 
 export default function SignLayout({ children }: { children: ReactNode }) {
     const pathname = usePathname()

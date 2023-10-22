@@ -12,9 +12,11 @@ import {
     useRef,
     useImperativeHandle,
     forwardRef,
+    Ref,
 } from 'react'
 import style from './input.module.css'
 import classnames from 'classnames'
+import { mergeRefs } from '@/src/utils/ref'
 
 interface IPropsForInput {
     placeholder?: string
@@ -31,7 +33,7 @@ interface IPropsForInput {
 
 type InputRef = ElementRef<'input'>
 
-export const Input: FC<IPropsForInput> = forwardRef<InputRef, IPropsForInput>(
+export const Input = forwardRef<InputRef, IPropsForInput>(
     (props: IPropsForInput, ref) => {
         const {
             startAndornment,
@@ -47,7 +49,7 @@ export const Input: FC<IPropsForInput> = forwardRef<InputRef, IPropsForInput>(
         const [value, setValue] = useState<string>()
         const innerRef = useRef<InputRef>(null)
 
-        useImperativeHandle(ref, () => innerRef.current!, [innerRef])
+        const _ref = mergeRefs([ref, innerRef])
 
         const isElevated = useMemo(
             () => Boolean(isFocused) || Boolean(value),
@@ -148,7 +150,7 @@ export const Input: FC<IPropsForInput> = forwardRef<InputRef, IPropsForInput>(
                         {props.label}
                     </label>
                     <input
-                        ref={ref ?? innerRef}
+                        ref={_ref}
                         onBlur={(e) => handleBlur(e)}
                         onFocus={(e) => handleFocus(e)}
                         onChange={(e) => handleChange(e)}
