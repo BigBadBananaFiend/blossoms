@@ -40,6 +40,10 @@
     margin-left: 8px;
 }
 
+.andornment-interactive {
+    cursor: pointer;
+}
+
 .label {
     all: unset;
     position: absolute;

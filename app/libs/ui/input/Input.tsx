@@ -8,7 +8,6 @@ import {
     FocusEvent,
     useState,
     ChangeEvent,
-    ReactElement,
 } from 'react'
 import style from './input.module.css'
 import classnames from 'classnames'
@@ -16,6 +15,7 @@ import classnames from 'classnames'
 interface IPropsForInput {
     placeholder?: string
     label?: string
+    type?: string
     onFocus?: (e?: FocusEvent<HTMLInputElement, Element>) => void
     onBlur?: (e?: FocusEvent<HTMLInputElement, Element>) => void
     onChange?: (e?: ChangeEvent<HTMLInputElement>) => void
@@ -28,6 +28,8 @@ interface IPropsForInput {
 export const Input: FC<IPropsForInput> = (props: IPropsForInput) => {
     const [isFocused, setIsFocused] = useState<boolean>(false)
     const [value, setValue] = useState<string>()
+
+    console.log('input render')
 
     const isElevated = useMemo(
         () => Boolean(isFocused) || Boolean(value),
@@ -69,12 +71,15 @@ export const Input: FC<IPropsForInput> = (props: IPropsForInput) => {
     )
 
     const StartAndornment = useMemo(() => {
-        if (!Element) {
-            return
-        }
+        const atomicClass = classnames({
+            [`${style.andornment}`]: true,
+            [`${style['andornment-start']}`]: true,
+            [`${style['andornment-interactive']}`]: Boolean(startAndornmentFn),
+        })
+
         return (
             <div
-                className={`${style.andornment} ${style['andornment-start']}`}
+                className={atomicClass}
                 onClick={
                     startAndornmentFn
                         ? (e) => {
@@ -89,10 +94,15 @@ export const Input: FC<IPropsForInput> = (props: IPropsForInput) => {
         )
     }, [startAndornment, startAndornmentFn])
 
-    const EndAndornment = useMemo(
-        () => (
+    const EndAndornment = useMemo(() => {
+        const atomicClass = classnames({
+            [`${style.andornment}`]: true,
+            [`${style['andornment-start']}`]: true,
+            [`${style['andornment-interactive']}`]: Boolean(endAndornmentFn),
+        })
+        return (
             <div
-                className={`${style.andornment} ${style['andornment-end']}`}
+                className={atomicClass}
                 onClick={
                     endAndornmentFn
                         ? (e) => {
@@ -104,9 +114,8 @@ export const Input: FC<IPropsForInput> = (props: IPropsForInput) => {
             >
                 {endAndornment}
             </div>
-        ),
-        [endAndornment, endAndornmentFn]
-    )
+        )
+    }, [endAndornment, endAndornmentFn])
 
     const atomicWrapperClass = classnames({
         [`${style.wrapper}`]: true,
@@ -127,6 +136,7 @@ export const Input: FC<IPropsForInput> = (props: IPropsForInput) => {
                     onBlur={(e) => handleBlur(e)}
                     onFocus={(e) => handleFocus(e)}
                     onChange={(e) => handleChange(e)}
+                    type={props.type ?? 'text'}
                     placeholder={props.placeholder}
                     className={style.input}
                     value={value}

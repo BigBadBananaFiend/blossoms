@@ -1,17 +1,39 @@
+'use client'
+
 import { EmailIcon } from '@/app/libs/icons/Email'
 import { Input } from '@/app/libs/ui/input/Input'
-import { Fragment } from 'react'
+import style from '../style.module.css'
+import { PasswordIcon } from '@/app/libs/icons/Password'
+import { VisibilityIcon, VisibilityOffIcon } from '@/app/libs/icons/Visibility'
+
+import { useMemo } from 'react'
+import { usePasswordIcon } from '@/app/hooks/sign/usePasswordIcons'
 
 export default function Up() {
+    const { isVisible, switchVisible, type } = usePasswordIcon()
+
+    const endAndronment = useMemo(() => {
+        if (isVisible) {
+            return <VisibilityIcon size={20} />
+        }
+
+        return <VisibilityOffIcon size={20} />
+    }, [isVisible])
+
     return (
-        <Fragment>
-            <h1>UP</h1>
+        <div className={style['input-wrapper']}>
             <Input
-                label="World"
-                placeholder="Hello"
+                label="E-mail"
                 startAndornment={<EmailIcon size={20} />}
                 endAndornment={<EmailIcon size={20} />}
             />
-        </Fragment>
+            <Input
+                label="Password"
+                type={type}
+                startAndornment={<PasswordIcon size={20} />}
+                endAndornment={endAndronment}
+                endAndornmentFn={() => switchVisible()}
+            />
+        </div>
     )
 }
