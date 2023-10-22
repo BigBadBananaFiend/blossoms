@@ -76,6 +76,12 @@ span {
     color: var(--color-white);
 }
 
+input {
+    all: unset;
+    color: var(--color-white);
+    font-size: var(--font-size-body);
+}
+
 .text-small {
     font-size: var(--font-size-caption);
 }

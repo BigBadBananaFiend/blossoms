@@ -1,0 +1,56 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid;
+    border-color: var(--color-white);
+    border-radius: 4px;
+    width: 100%;
+    padding: 8px 12px;
+}
+
+.focused {
+    border-color: var(--color-green);
+}
+
+.inner {
+    position: relative;
+}
+
+.input {
+    width: 100%;
+}
+
+.email-icon {
+    fill: var(--color-white);
+    width: 18px;
+}
+
+.andornment {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+}
+
+.andornment-start {
+    margin-right: 8px;
+}
+
+.andornment-end {
+    margin-left: 8px;
+}
+
+.label {
+    all: unset;
+    position: absolute;
+    color: var(--color-white);
+    background-color: var(--color-black);
+    font-size: var(--font-size-body);
+    padding: 0px 4px;
+    height: 100%;
+    transition: transform 0.2s ease;
+}
+
+.elevated {
+    transform: translateY(-25px);
+}

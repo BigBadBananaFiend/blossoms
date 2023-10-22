@@ -1,15 +1,13 @@
 .active-caption {
-    animation: props-swap 2s linear infinite;
+    animation: color-swap 2s linear infinite;
 }
 
-@keyframes props-swap {
+@keyframes color-swap {
     0%,
     100% {
         color: var(--color-white);
-        transform: scale(1);
     }
     50% {
         color: var(--color-yellow);
-        transform: scale(1.2);
     }
 }

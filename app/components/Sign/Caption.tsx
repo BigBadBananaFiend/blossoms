@@ -20,11 +20,12 @@ export const Captions: FC = () => {
         return () => clearInterval(interval)
     })
 
-    console.log(activeIndex)
     const captions = [0, 1, 2].map((indx) => (
         <span
             key={indx}
-            className={indx === activeIndex ? style['active-caption'] : ''}
+            className={
+                indx === activeIndex ? style['active-caption'] : ''
+            }
         >
             {CAPTION_CONTENT[indx as keyof typeof CAPTION_CONTENT]}
         </span>

@@ -10,6 +10,8 @@ export default function SignLayout({ children }: { children: ReactNode }) {
 
     const isIn = useMemo(() => pathname === '/sign/in', [pathname])
 
+    console.log('render')
+
     return (
         <div className={style['page-wrapper']}>
             <div className={style['content-wrapper']}>
