@@ -1,6 +1,12 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client'
+
+import { useEffectOnce } from './hooks/useEffectOnce'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-    return <div>Hello</div>
+    const router = useRouter()
+
+    useEffectOnce(() => {
+        router.push('/sign/in')
+    })
 }
