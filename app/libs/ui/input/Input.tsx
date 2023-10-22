@@ -8,6 +8,10 @@ import {
     FocusEvent,
     useState,
     ChangeEvent,
+    ElementRef,
+    useRef,
+    useImperativeHandle,
+    forwardRef,
 } from 'react'
 import style from './input.module.css'
 import classnames from 'classnames'
@@ -25,124 +29,139 @@ interface IPropsForInput {
     endAndornmentFn?: () => void
 }
 
-export const Input: FC<IPropsForInput> = (props: IPropsForInput) => {
-    const [isFocused, setIsFocused] = useState<boolean>(false)
-    const [value, setValue] = useState<string>()
+type InputRef = ElementRef<'input'>
 
-    console.log('input render')
+export const Input: FC<IPropsForInput> = forwardRef<InputRef, IPropsForInput>(
+    (props: IPropsForInput, ref) => {
+        const {
+            startAndornment,
+            startAndornmentFn,
+            endAndornment,
+            endAndornmentFn,
+            onBlur,
+            onChange,
+            onFocus,
+        } = props
 
-    const isElevated = useMemo(
-        () => Boolean(isFocused) || Boolean(value),
-        [isFocused, value]
-    )
+        const [isFocused, setIsFocused] = useState<boolean>(false)
+        const [value, setValue] = useState<string>()
+        const innerRef = useRef<InputRef>(null)
 
-    const {
-        startAndornment,
-        startAndornmentFn,
-        endAndornment,
-        endAndornmentFn,
-        onBlur,
-        onChange,
-        onFocus,
-    } = props
+        useImperativeHandle(ref, () => innerRef.current!, [innerRef])
 
-    const handleBlur = useCallback(
-        (e: FocusEvent<HTMLInputElement, Element>) => {
-            setIsFocused(false)
-            onBlur?.(e)
-        },
-        [onBlur]
-    )
+        const isElevated = useMemo(
+            () => Boolean(isFocused) || Boolean(value),
+            [isFocused, value]
+        )
 
-    const handleFocus = useCallback(
-        (e: FocusEvent<HTMLInputElement, Element>) => {
-            setIsFocused(true)
-            onFocus?.(e)
-        },
-        [onFocus]
-    )
+        const handleBlur = useCallback(
+            (e: FocusEvent<HTMLInputElement, Element>) => {
+                setIsFocused(false)
+                onBlur?.(e)
+            },
+            [onBlur]
+        )
 
-    const handleChange = useCallback(
-        (e: ChangeEvent<HTMLInputElement>) => {
-            setValue(e.target.value)
-            onChange?.(e)
-        },
-        [onChange]
-    )
+        const handleFocus = useCallback(
+            (e: FocusEvent<HTMLInputElement, Element>) => {
+                setIsFocused(true)
+                onFocus?.(e)
+            },
+            [onFocus]
+        )
 
-    const StartAndornment = useMemo(() => {
-        const atomicClass = classnames({
-            [`${style.andornment}`]: true,
-            [`${style['andornment-start']}`]: true,
-            [`${style['andornment-interactive']}`]: Boolean(startAndornmentFn),
+        const handleChange = useCallback(
+            (e: ChangeEvent<HTMLInputElement>) => {
+                setValue(e.target.value)
+                onChange?.(e)
+            },
+            [onChange]
+        )
+
+        const StartAndornment = useMemo(() => {
+            const atomicClass = classnames({
+                [`${style.andornment}`]: true,
+                [`${style['andornment-start']}`]: true,
+                [`${style['andornment-interactive']}`]:
+                    Boolean(startAndornmentFn),
+            })
+
+            return (
+                <div
+                    className={atomicClass}
+                    onClick={
+                        startAndornmentFn
+                            ? (e) => {
+                                  e.stopPropagation()
+                                  startAndornmentFn?.()
+                              }
+                            : undefined
+                    }
+                >
+                    {startAndornment}
+                </div>
+            )
+        }, [startAndornment, startAndornmentFn])
+
+        const EndAndornment = useMemo(() => {
+            const atomicClass = classnames({
+                [`${style.andornment}`]: true,
+                [`${style['andornment-start']}`]: true,
+                [`${style['andornment-interactive']}`]:
+                    Boolean(endAndornmentFn),
+            })
+            return (
+                <div
+                    className={atomicClass}
+                    onClick={
+                        endAndornmentFn
+                            ? (e) => {
+                                  e.stopPropagation()
+                                  endAndornmentFn?.()
+                              }
+                            : undefined
+                    }
+                >
+                    {endAndornment}
+                </div>
+            )
+        }, [endAndornment, endAndornmentFn])
+
+        const atomicWrapperClass = classnames({
+            [`${style.wrapper}`]: true,
+            [`${style.focused}`]: isFocused,
+        })
+
+        const atomicLabelClass = classnames({
+            [`${style.label}`]: true,
+            [`${style.elevated}`]: isElevated,
         })
 
         return (
-            <div
-                className={atomicClass}
-                onClick={
-                    startAndornmentFn
-                        ? (e) => {
-                              e.stopPropagation()
-                              startAndornmentFn?.()
-                          }
-                        : undefined
-                }
-            >
-                {startAndornment}
+            <div className={atomicWrapperClass}>
+                {props.startAndornment && StartAndornment}
+                <div className={style.inner}>
+                    <label
+                        onClick={() => innerRef.current?.focus()}
+                        className={atomicLabelClass}
+                    >
+                        {props.label}
+                    </label>
+                    <input
+                        ref={ref ?? innerRef}
+                        onBlur={(e) => handleBlur(e)}
+                        onFocus={(e) => handleFocus(e)}
+                        onChange={(e) => handleChange(e)}
+                        type={props.type ?? 'text'}
+                        placeholder={props.placeholder}
+                        className={style.input}
+                        value={value}
+                    ></input>
+                </div>
+                {props.endAndornment && EndAndornment}
             </div>
         )
-    }, [startAndornment, startAndornmentFn])
+    }
+)
 
-    const EndAndornment = useMemo(() => {
-        const atomicClass = classnames({
-            [`${style.andornment}`]: true,
-            [`${style['andornment-start']}`]: true,
-            [`${style['andornment-interactive']}`]: Boolean(endAndornmentFn),
-        })
-        return (
-            <div
-                className={atomicClass}
-                onClick={
-                    endAndornmentFn
-                        ? (e) => {
-                              e.stopPropagation()
-                              endAndornmentFn?.()
-                          }
-                        : undefined
-                }
-            >
-                {endAndornment}
-            </div>
-        )
-    }, [endAndornment, endAndornmentFn])
-
-    const atomicWrapperClass = classnames({
-        [`${style.wrapper}`]: true,
-        [`${style.focused}`]: isFocused,
-    })
-
-    const atomicLabelClass = classnames({
-        [`${style.label}`]: true,
-        [`${style.elevated}`]: isElevated,
-    })
-
-    return (
-        <div className={atomicWrapperClass}>
-            {props.startAndornment && StartAndornment}
-            <div className={style.inner}>
-                <label className={atomicLabelClass}>{props.label}</label>
-                <input
-                    onBlur={(e) => handleBlur(e)}
-                    onFocus={(e) => handleFocus(e)}
-                    onChange={(e) => handleChange(e)}
-                    type={props.type ?? 'text'}
-                    placeholder={props.placeholder}
-                    className={style.input}
-                    value={value}
-                ></input>
-            </div>
-            {props.endAndornment && EndAndornment}
-        </div>
-    )
-}
+Input.displayName = 'input'

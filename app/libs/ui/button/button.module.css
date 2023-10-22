@@ -1,0 +1,23 @@
+.main {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    cursor: pointer;
+    box-shadow: 2px 2px black;
+}
+
+.primary {
+    background-color: var(--color-green);
+    color: var(--color-white);
+}
+
+.primary:hover,
+.primary:focus {
+    background-color: var(--color-green-light);
+}
+
+.text-wrapper {
+    width: 100%;
+    text-align: center;
+}

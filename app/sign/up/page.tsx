@@ -8,6 +8,7 @@ import { VisibilityIcon, VisibilityOffIcon } from '@/app/libs/icons/Visibility'
 
 import { useMemo } from 'react'
 import { usePasswordIcon } from '@/app/hooks/sign/usePasswordIcons'
+import { Button } from '@/app/libs/ui/button/Button'
 
 export default function Up() {
     const { isVisible, switchVisible, type } = usePasswordIcon()
@@ -34,6 +35,7 @@ export default function Up() {
                 endAndornment={endAndronment}
                 endAndornmentFn={() => switchVisible()}
             />
+            <Button text="Submit" />
         </div>
     )
 }
