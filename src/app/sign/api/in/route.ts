@@ -36,6 +36,7 @@ export async function POST(req: Request) {
         const token = jwt.sign({ email, id: user.id }, 'token')
 
         // TODO: Secure can not be false on prod
+        // TODO: Add refresh token logic
         return new Response('Signed in', {
             status: 200,
             headers: {

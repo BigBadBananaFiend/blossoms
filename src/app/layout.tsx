@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { inconsolata, karla } from './fonts'
+import { QueryProvider } from './QueryProvider'
 
 export const metadata: Metadata = {
     title: 'Blossoms',
@@ -14,9 +15,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${karla.variable} ${inconsolata.variable}`}>
-                {children}
-            </body>
+            <QueryProvider>
+                <body className={`${karla.variable} ${inconsolata.variable}`}>
+                    {children}
+                </body>
+            </QueryProvider>
         </html>
     )
 }

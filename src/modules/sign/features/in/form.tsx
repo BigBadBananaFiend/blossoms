@@ -6,6 +6,7 @@ import { ISignFormData } from '../../types'
 import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useCallback } from 'react'
 import { useValidateEmail } from '../../hooks/useValidateEmail'
+import { useIdentity } from '@/src/core/api'
 
 export const SignInForm = () => {
     const {
@@ -17,6 +18,8 @@ export const SignInForm = () => {
         defaultValues: DEFAULT_SIGN_FORM_VALUES,
         mode: 'onTouched',
     })
+
+    const identity = useIdentity({ enabled: false })
 
     const emailValidation = useValidateEmail()
 
@@ -37,9 +40,8 @@ export const SignInForm = () => {
                 body: JSON.stringify(data),
             })
 
-            if (response) {
-                console.log(await response.json())
-            }
+            // TODO => refetch identity => handle redirect up the tree
+            identity.refetch()
         } catch (e) {
             // handle error
         }
