@@ -1,6 +1,6 @@
-import { ISignForm } from '../types'
+import { ISignFormData } from '../types'
 
-export const DEFAULT_SIGN_FORM_VALUES: ISignForm = {
+export const DEFAULT_SIGN_FORM_VALUES: ISignFormData = {
     email: '',
     password: '',
 }

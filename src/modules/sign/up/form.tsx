@@ -2,7 +2,7 @@ import { EmailIcon } from '@/src/libs/icons'
 import { Input, Button } from '@/src/libs/ui'
 import { Controller, useForm } from 'react-hook-form'
 import { InputWrapper, PasswordInput } from '../components'
-import { ISignForm } from '../types'
+import { ISignFormData } from '../types'
 import { DEFAULT_SIGN_FORM_VALUES } from '../data'
 import { useValidatePassword } from '../hooks/useValidatePassword'
 import { useCallback } from 'react'
@@ -14,7 +14,7 @@ export const SignUpForm = () => {
         control,
         getValues,
         formState: { errors, dirtyFields },
-    } = useForm<ISignForm>({
+    } = useForm<ISignFormData>({
         defaultValues: DEFAULT_SIGN_FORM_VALUES,
         mode: 'onTouched',
     })
@@ -42,8 +42,24 @@ export const SignUpForm = () => {
         return isValid || message
     }, [dirtyFields.password, getValues, passwordValidation])
 
+    const submit = useCallback(async (data: ISignFormData) => {
+        try {
+            // TODO: store routes in some object
+            const response = await fetch('http://localhost:3000/sign/api/up', {
+                method: 'POST',
+                body: JSON.stringify(data),
+            })
+
+            if (response) {
+                console.log(await response.json())
+            }
+        } catch (e) {
+            // handle error
+        }
+    }, [])
+
     return (
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <form onSubmit={handleSubmit((data) => submit(data))}>
             <InputWrapper>
                 <Controller
                     control={control}

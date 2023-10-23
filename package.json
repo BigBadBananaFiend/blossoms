@@ -13,7 +13,10 @@
     },
     "dependencies": {
         "@prisma/client": "^5.4.2",
+        "bcrypt": "^5.1.1",
         "classnames": "^2.3.2",
+        "cookie": "^0.5.0",
+        "jsonwebtoken": "^9.0.2",
         "next": "13.5.6",
         "prisma": "^5.4.2",
         "react": "^18",
@@ -21,6 +24,9 @@
         "react-hook-form": "^7.47.0"
     },
     "devDependencies": {
+        "@types/bcrypt": "^5.0.1",
+        "@types/cookie": "^0.5.3",
+        "@types/jsonwebtoken": "^9.0.4",
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
