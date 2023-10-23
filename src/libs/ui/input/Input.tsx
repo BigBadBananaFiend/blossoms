@@ -15,8 +15,10 @@ import style from './input.module.css'
 import classnames from 'classnames'
 import { mergeRefs } from '@/src/utils/ref'
 
-interface IPropsForInput {
+export interface IPropsForInput {
     placeholder?: string
+    value?: string | number
+    name?: string
     label?: string
     type?: string
     onFocus?: (e?: FocusEvent<HTMLInputElement, Element>) => void
@@ -26,9 +28,11 @@ interface IPropsForInput {
     startAndornmentFn?: () => void
     endAndornment?: ReactNode
     endAndornmentFn?: () => void
+    isCritical?: boolean
+    helperMessage?: string
 }
 
-type InputRef = ElementRef<'input'>
+export type InputRef = ElementRef<'input'>
 
 export const Input = forwardRef<InputRef, IPropsForInput>(
     (props: IPropsForInput, ref) => {
@@ -40,10 +44,13 @@ export const Input = forwardRef<InputRef, IPropsForInput>(
             onBlur,
             onChange,
             onFocus,
+            name,
+            value,
+            isCritical,
+            helperMessage,
         } = props
 
         const [isFocused, setIsFocused] = useState<boolean>(false)
-        const [value, setValue] = useState<string>()
         const innerRef = useRef<InputRef>(null)
 
         const _ref = mergeRefs([ref, innerRef])
@@ -71,7 +78,6 @@ export const Input = forwardRef<InputRef, IPropsForInput>(
 
         const handleChange = useCallback(
             (e: ChangeEvent<HTMLInputElement>) => {
-                setValue(e.target.value)
                 onChange?.(e)
             },
             [onChange]
@@ -128,7 +134,8 @@ export const Input = forwardRef<InputRef, IPropsForInput>(
 
         const atomicWrapperClass = classnames({
             [`${style.wrapper}`]: true,
-            [`${style.focused}`]: isFocused,
+            [`${style.focused}`]: isFocused && !isCritical,
+            [`${style.critical}`]: isCritical,
         })
 
         const atomicLabelClass = classnames({
@@ -137,27 +144,35 @@ export const Input = forwardRef<InputRef, IPropsForInput>(
         })
 
         return (
-            <div className={atomicWrapperClass}>
-                {props.startAndornment && StartAndornment}
-                <div className={style.inner}>
-                    <label
-                        onClick={() => innerRef.current?.focus()}
-                        className={atomicLabelClass}
-                    >
-                        {props.label}
-                    </label>
-                    <input
-                        ref={_ref}
-                        onBlur={(e) => handleBlur(e)}
-                        onFocus={(e) => handleFocus(e)}
-                        onChange={(e) => handleChange(e)}
-                        type={props.type ?? 'text'}
-                        placeholder={props.placeholder}
-                        className={style.input}
-                        value={value}
-                    ></input>
+            <div className={style['component-wrapper']}>
+                <div className={atomicWrapperClass}>
+                    {props.startAndornment && StartAndornment}
+                    <div className={style.inner}>
+                        <label
+                            onClick={() => innerRef.current?.focus()}
+                            className={atomicLabelClass}
+                        >
+                            {props.label}
+                        </label>
+                        <input
+                            ref={_ref}
+                            onBlur={(e) => handleBlur(e)}
+                            onFocus={(e) => handleFocus(e)}
+                            onChange={(e) => handleChange(e)}
+                            type={props.type ?? 'text'}
+                            name={name}
+                            placeholder={props.placeholder}
+                            className={style.input}
+                            value={value}
+                        ></input>
+                    </div>
+                    {props.endAndornment && EndAndornment}
                 </div>
-                {props.endAndornment && EndAndornment}
+                <div className={style['message-wrapper']}>
+                    <span className={style['message-content']}>
+                        {helperMessage}
+                    </span>
+                </div>
             </div>
         )
     }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffectOnce } from '@/src/hooks/useEffectOnce'
+import { useEffectOnce } from '@/src/core/hooks/useEffectOnce'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {

@@ -1,6 +1,6 @@
 import { FC, Fragment, useState } from 'react'
-import style from './caption.module.css'
-import { useEffectOnce } from '@/src/hooks/useEffectOnce'
+import style from './style.module.css'
+import { useEffectOnce } from '@/src/core/hooks/useEffectOnce'
 
 const CAPTION_CONTENT = {
     0: 'swap. ',
