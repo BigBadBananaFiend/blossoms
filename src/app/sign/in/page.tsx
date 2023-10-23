@@ -1,9 +1,7 @@
-import SignLayout from '../layout'
+'use client'
+
+import { SignInForm } from '@/src/modules/sign/features/in/form'
 
 export default function In() {
-    return (
-        <div>
-            <input placeholder="placeholder"></input>
-        </div>
-    )
+    return <SignInForm />
 }

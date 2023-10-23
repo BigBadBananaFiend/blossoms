@@ -1,14 +1,13 @@
 import { EmailIcon } from '@/src/libs/icons'
 import { Input, Button } from '@/src/libs/ui'
 import { Controller, useForm } from 'react-hook-form'
-import { InputWrapper, PasswordInput } from '../components'
-import { ISignFormData } from '../types'
-import { DEFAULT_SIGN_FORM_VALUES } from '../data'
-import { useValidatePassword } from '../hooks/useValidatePassword'
+import { InputWrapper, PasswordInput } from '../../components'
+import { ISignFormData } from '../../types'
+import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useCallback } from 'react'
-import { useValidateEmail } from '../hooks/useValidateEmail'
+import { useValidateEmail } from '../../hooks/useValidateEmail'
 
-export const SignUpForm = () => {
+export const SignInForm = () => {
     const {
         handleSubmit,
         control,
@@ -19,7 +18,6 @@ export const SignUpForm = () => {
         mode: 'onTouched',
     })
 
-    const passwordValidation = useValidatePassword()
     const emailValidation = useValidateEmail()
 
     const handleEmailValidation = useCallback(() => {
@@ -31,21 +29,10 @@ export const SignUpForm = () => {
         return isValid || message
     }, [dirtyFields.email, emailValidation, getValues])
 
-    const handlePasswordValidation = useCallback(() => {
-        if (!dirtyFields.password) {
-            return
-        }
-
-        const { isValid, message } = passwordValidation.validate(
-            getValues('password')
-        )
-        return isValid || message
-    }, [dirtyFields.password, getValues, passwordValidation])
-
     const submit = useCallback(async (data: ISignFormData) => {
         try {
             // TODO: store routes in some object
-            const response = await fetch('http://localhost:3000/sign/api/up', {
+            const response = await fetch('http://localhost:3000/sign/api/in', {
                 method: 'POST',
                 body: JSON.stringify(data),
             })
@@ -89,10 +76,7 @@ export const SignUpForm = () => {
                 <Controller
                     control={control}
                     rules={{
-                        required: true,
-                        validate: {
-                            isValid: handlePasswordValidation,
-                        },
+                        required: true || 'Required field',
                     }}
                     name="password"
                     render={({
