@@ -1,7 +1,6 @@
 'use client'
 
 import {
-    FC,
     ReactNode,
     useMemo,
     useCallback,
@@ -10,9 +9,7 @@ import {
     ChangeEvent,
     ElementRef,
     useRef,
-    useImperativeHandle,
     forwardRef,
-    Ref,
 } from 'react'
 import style from './input.module.css'
 import classnames from 'classnames'
