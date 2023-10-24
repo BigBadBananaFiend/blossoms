@@ -1,11 +1,11 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-const queryClient = new QueryClient()
-
 export const QueryProvider = ({ children }: { children: ReactNode }) => {
+    const [queryClient] = useState(() => new QueryClient())
+
     return (
         <QueryClientProvider client={queryClient}>
             {children}

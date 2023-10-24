@@ -13,7 +13,7 @@ import {
 } from 'react'
 import style from './input.module.css'
 import classnames from 'classnames'
-import { mergeRefs } from '@/src/utils/ref'
+import { mergeRefs } from '@/src/core/utils/client/ref'
 
 export interface IPropsForInput {
     placeholder?: string

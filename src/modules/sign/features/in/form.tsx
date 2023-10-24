@@ -7,6 +7,7 @@ import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useCallback } from 'react'
 import { useValidateEmail } from '../../hooks/useValidateEmail'
 import { useIdentity } from '@/src/core/api'
+import { API_ROUTES } from '@/src/core/routes/api-routes'
 
 export const SignInForm = () => {
     const {
@@ -35,7 +36,7 @@ export const SignInForm = () => {
     const submit = useCallback(async (data: ISignFormData) => {
         try {
             // TODO: store routes in some object
-            const response = await fetch('http://localhost:3000/sign/api/in', {
+            const response = await fetch(API_ROUTES.sign.in, {
                 method: 'POST',
                 body: JSON.stringify(data),
             })

@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-import { isBodyValid } from '../utils'
-import cookie from 'cookie'
+import { cookies } from 'next/headers'
 import * as jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import { isBodyValid } from '@/src/core/utils/api/signBodyValidator'
 
 const prisma = new PrismaClient()
 
@@ -37,16 +37,9 @@ export async function POST(req: Request) {
 
         // TODO: Secure can not be false on prod
         // TODO: Add refresh token logic
+        cookies().set('token', token, { httpOnly: true })
         return new Response('Signed in', {
             status: 200,
-            headers: {
-                'Set-Cookie': cookie.serialize('token', token, {
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: 60 * 60,
-                    sameSite: 'strict',
-                }),
-            },
         })
     } catch (e) {
         return new Response('Internal server error', { status: 500 })

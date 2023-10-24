@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import './globals.css'
 import { inconsolata, karla } from './fonts'
-import { QueryProvider } from './QueryProvider'
+import { QueryProvider } from '../core/components/providers/query-provider'
+import './globals.css'
+import { AuthLayer } from '../core/components/auth/AuthLayer'
 
 export const metadata: Metadata = {
     title: 'Blossoms',
@@ -15,11 +16,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <QueryProvider>
-                <body className={`${karla.variable} ${inconsolata.variable}`}>
-                    {children}
-                </body>
-            </QueryProvider>
+            <body className={`${karla.variable} ${inconsolata.variable}`}>
+                <QueryProvider>
+                    <AuthLayer>{children}</AuthLayer>
+                </QueryProvider>
+            </body>
         </html>
     )
 }

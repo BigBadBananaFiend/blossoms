@@ -1,8 +1,8 @@
+import { isBodyValid } from '@/src/core/utils/api/signBodyValidator'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
-import cookie from 'cookie'
+import { cookies } from 'next/headers'
 import * as jwt from 'jsonwebtoken'
-import { isBodyValid } from '../utils'
 
 // TODO: Should probably re-use one instance for all endpoints
 const prisma = new PrismaClient()
@@ -14,7 +14,6 @@ export async function POST(req: Request) {
         if (!isBodyValid(body)) {
             return new Response('Bad request', { status: 400 })
         }
-
 
         const { email, password } = body
 
@@ -40,18 +39,11 @@ export async function POST(req: Request) {
 
         // TODO: Add jwt secret
         const token = jwt.sign({ email, id: user.id }, 'token')
+        cookies().set('token', token, { httpOnly: true })
 
         // TODO: Secure can not be false on prod
         return new Response('User created', {
             status: 200,
-            headers: {
-                'Set-Cookie': cookie.serialize('token', token, {
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: 60 * 60,
-                    sameSite: 'strict',
-                }),
-            },
         })
     } catch (e) {
         // TODO: Do not log on prod
