@@ -23,7 +23,7 @@ export const AuthLayer = ({ children }: { children: ReactNode }) => {
         return <h1>Loading... </h1>
     }
 
-    if (isError || !data) {
+    if (!data || isError) {
         return <h1>Something went wrong... </h1>
     }
 

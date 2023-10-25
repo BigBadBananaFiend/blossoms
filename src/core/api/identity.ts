@@ -14,7 +14,7 @@ const fetcher = async () =>
 export const useIdentity = (
     options?: UseQueryOptions
 ): UseQueryResult<IResponse, Error> => {
-    const queryKey = ['identity']
+    const queryKey = ['user/identity']
     const queryFn = () => fetcher()
 
     return useQuery({

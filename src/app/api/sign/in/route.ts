@@ -11,7 +11,10 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         if (!isBodyValid(body)) {
-            return new Response('Bad request', { status: 400 })
+            return new Response(
+                JSON.stringify({ ok: false, message: 'Bad request' }),
+                { status: 400 }
+            )
         }
 
         const { email, password } = body
@@ -23,13 +26,19 @@ export async function POST(req: Request) {
         })
 
         if (!user) {
-            return new Response('User not found', { status: 404 })
+            return new Response(
+                JSON.stringify({ ok: false, message: 'User not found' }),
+                { status: 404 }
+            )
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (!isPasswordValid) {
-            return new Response('Invalid password', { status: 401 })
+            return new Response(
+                JSON.stringify({ ok: false, message: 'Invalid password' }),
+                { status: 401 }
+            )
         }
 
         // TODO: Add jwt secret
@@ -38,10 +47,16 @@ export async function POST(req: Request) {
         // TODO: Secure can not be false on prod
         // TODO: Add refresh token logic
         cookies().set('token', token, { httpOnly: true })
-        return new Response('Signed in', {
-            status: 200,
-        })
+        return new Response(
+            JSON.stringify({ ok: true, message: 'User signed in' }),
+            {
+                status: 200,
+            }
+        )
     } catch (e) {
-        return new Response('Internal server error', { status: 500 })
+        return new Response(
+            JSON.stringify({ ok: false, message: 'Internal server error' }),
+            { status: 500 }
+        )
     }
 }

@@ -12,7 +12,10 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         if (!isBodyValid(body)) {
-            return new Response('Bad request', { status: 400 })
+            return new Response(
+                JSON.stringify({ ok: false, message: 'Bad request' }),
+                { status: 400 }
+            )
         }
 
         const { email, password } = body
@@ -24,7 +27,10 @@ export async function POST(req: Request) {
                 },
             })
         ) {
-            return new Response('User already exists', { status: 400 })
+            return new Response(
+                JSON.stringify({ ok: false, message: 'User already exists' }),
+                { status: 400 }
+            )
         }
 
         const salt = await bcrypt.genSalt(10)
@@ -42,12 +48,18 @@ export async function POST(req: Request) {
         cookies().set('token', token, { httpOnly: true })
 
         // TODO: Secure can not be false on prod
-        return new Response('User created', {
-            status: 200,
-        })
+        return new Response(
+            JSON.stringify({ ok: true, message: 'User created' }),
+            {
+                status: 200,
+            }
+        )
     } catch (e) {
         // TODO: Do not log on prod
         console.error(e)
-        return new Response('Internal server error', { status: 500 })
+        return new Response(
+            JSON.stringify({ ok: false, message: 'Internal server error' }),
+            { status: 500 }
+        )
     }
 }

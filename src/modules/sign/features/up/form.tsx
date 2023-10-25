@@ -7,6 +7,7 @@ import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useValidatePassword } from '../../hooks/useValidatePassword'
 import { useCallback } from 'react'
 import { useValidateEmail } from '../../hooks/useValidateEmail'
+import { useSignUpMutation } from '../../api/useSignUp'
 
 export const SignUpForm = () => {
     const {
@@ -21,6 +22,7 @@ export const SignUpForm = () => {
 
     const passwordValidation = useValidatePassword()
     const emailValidation = useValidateEmail()
+    const { isLoading, isError, mutateAsync } = useSignUpMutation()
 
     const handleEmailValidation = useCallback(() => {
         if (!dirtyFields.email) {
@@ -42,21 +44,12 @@ export const SignUpForm = () => {
         return isValid || message
     }, [dirtyFields.password, getValues, passwordValidation])
 
-    const submit = useCallback(async (data: ISignFormData) => {
-        try {
-            // TODO: store routes in some object
-            const response = await fetch('http://localhost:3000/sign/api/up', {
-                method: 'POST',
-                body: JSON.stringify(data),
-            })
-
-            if (response) {
-                console.log(await response.json())
-            }
-        } catch (e) {
-            // handle error
-        }
-    }, [])
+    const submit = useCallback(
+        async (data: ISignFormData) => {
+            await mutateAsync(data)
+        },
+        [mutateAsync]
+    )
 
     return (
         <form onSubmit={handleSubmit((data) => submit(data))}>
@@ -109,7 +102,7 @@ export const SignUpForm = () => {
                         />
                     )}
                 />
-                <Button text="Submit" />
+                <Button isLoading={isLoading && !isError} text="Submit" />
             </InputWrapper>
         </form>
     )
