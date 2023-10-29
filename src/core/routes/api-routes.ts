@@ -8,4 +8,9 @@ export const API_ROUTES = {
         in: `${BASE_API_URL}/sign/in`,
         up: `${BASE_API_URL}/sign/up`,
     },
+    external: {
+        countries: 'https://api.countrystatecity.in/v1/countries',
+        cities: (ios: string) =>
+            `https://api.countrystatecity.in/v1/countries/${ios}/cities`,
+    },
 }

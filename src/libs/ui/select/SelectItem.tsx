@@ -4,7 +4,7 @@ import {
     ItemIndicator,
     SelectItemProps,
 } from '@radix-ui/react-select'
-import { ElementRef, FC, forwardRef } from 'react'
+import { ElementRef, forwardRef } from 'react'
 import { Icons } from '../..'
 import style from './style.module.css'
 
@@ -21,7 +21,7 @@ export const SelectItem = forwardRef<SelectItemRef, IItemProps>(
                 <ItemText asChild>
                     <span>{itemText}</span>
                 </ItemText>
-                <ItemIndicator>
+                <ItemIndicator className={style.indicator}>
                     <Icons.Check size={20} />
                 </ItemIndicator>
             </Item>

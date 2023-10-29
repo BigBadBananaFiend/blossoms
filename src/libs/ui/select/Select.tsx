@@ -7,29 +7,28 @@ import {
     SelectProps,
     Viewport,
 } from '@radix-ui/react-select'
-import { FC, ReactNode, useState } from 'react'
+import { FC, ReactNode } from 'react'
 import { Icons } from '../..'
 import style from './style.module.css'
 
 interface ISelectProps extends SelectProps {
     valuePlaceholder: string
     children: ReactNode | ReactNode[]
+    setValue: (value: string) => void
 }
 
 export const Select: FC<ISelectProps> = ({
     onValueChange,
     children,
     valuePlaceholder,
+    value,
+    setValue,
     ...props
 }: ISelectProps) => {
-    const [value, setValue] = useState<string | null>(null)
-
-    console.log(value)
     return (
         <Root
-            name="Country"
-            value={value ?? ''}
-            onValueChange={(e) => setValue(e)}
+            value={value}
+            onValueChange={(value) => setValue(value)}
             {...props}
         >
             <Trigger className={style.trigger}>
