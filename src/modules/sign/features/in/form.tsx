@@ -6,8 +6,7 @@ import { ISignFormData } from '../../types'
 import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useCallback } from 'react'
 import { useValidateEmail } from '../../hooks/useValidateEmail'
-import { useIdentity } from '@/src/core/api'
-import { API_ROUTES } from '@/src/core/routes/api-routes'
+import { useSignInMutation } from '../../api/useSignIn'
 
 export const SignInForm = () => {
     const {
@@ -20,9 +19,8 @@ export const SignInForm = () => {
         mode: 'onTouched',
     })
 
-    const identity = useIdentity({ enabled: false })
-
     const emailValidation = useValidateEmail()
+    const { isLoading, isError, mutateAsync } = useSignInMutation()
 
     const handleEmailValidation = useCallback(() => {
         if (!dirtyFields.email) {
@@ -33,20 +31,12 @@ export const SignInForm = () => {
         return isValid || message
     }, [dirtyFields.email, emailValidation, getValues])
 
-    const submit = useCallback(async (data: ISignFormData) => {
-        try {
-            // TODO: store routes in some object
-            const response = await fetch(API_ROUTES.sign.in, {
-                method: 'POST',
-                body: JSON.stringify(data),
-            })
-
-            // TODO => refetch identity => handle redirect up the tree
-            identity.refetch()
-        } catch (e) {
-            // handle error
-        }
-    }, [])
+    const submit = useCallback(
+        async (data: ISignFormData) => {
+            await mutateAsync(data)
+        },
+        [mutateAsync]
+    )
 
     return (
         <form onSubmit={handleSubmit((data) => submit(data))}>
@@ -96,7 +86,7 @@ export const SignInForm = () => {
                         />
                     )}
                 />
-                <Button text="Submit" />
+                <Button isLoading={isLoading && !isError} text="Submit" />
             </InputWrapper>
         </form>
     )

@@ -1,5 +1,4 @@
-import { ISignInUpResponse } from '@/src/shared/types/sign'
-import { ISignFormData } from '../types'
+import { ISignFormData, ISignInUpResponse } from '../types'
 import { API_ROUTES } from '@/src/core/routes/api-routes'
 import {
     UseMutationOptions,
@@ -13,6 +12,7 @@ interface IResponse extends ISignInUpResponse {}
 
 const fetcher = async (params: IFetchParams) => {
     const response = await fetch(API_ROUTES.sign.up, {
+        method: 'POST',
         credentials: 'include',
         body: JSON.stringify(params),
     })

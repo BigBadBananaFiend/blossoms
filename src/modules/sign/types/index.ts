@@ -7,3 +7,8 @@ export interface ICustomValidationResult {
     isValid: boolean
     message?: string | undefined
 }
+
+export interface ISignInUpResponse {
+    ok: boolean
+    message?: string
+}

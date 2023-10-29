@@ -11,8 +11,8 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         if (!isBodyValid(body)) {
-            return new Response(
-                JSON.stringify({ ok: false, message: 'Bad request' }),
+            return Response.json(
+                { ok: false, message: 'Bad request' },
                 { status: 400 }
             )
         }
@@ -26,8 +26,8 @@ export async function POST(req: Request) {
         })
 
         if (!user) {
-            return new Response(
-                JSON.stringify({ ok: false, message: 'User not found' }),
+            return Response.json(
+                { ok: false, message: 'User not found' },
                 { status: 404 }
             )
         }
@@ -35,8 +35,8 @@ export async function POST(req: Request) {
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (!isPasswordValid) {
-            return new Response(
-                JSON.stringify({ ok: false, message: 'Invalid password' }),
+            return Response.json(
+                { ok: false, message: 'Invalid password' },
                 { status: 401 }
             )
         }
@@ -44,18 +44,17 @@ export async function POST(req: Request) {
         // TODO: Add jwt secret
         const token = jwt.sign({ email, id: user.id }, 'token')
 
-        // TODO: Secure can not be false on prod
         // TODO: Add refresh token logic
         cookies().set('token', token, { httpOnly: true })
-        return new Response(
-            JSON.stringify({ ok: true, message: 'User signed in' }),
+        return Response.json(
+            { ok: true, message: 'User signed in' },
             {
                 status: 200,
             }
         )
     } catch (e) {
-        return new Response(
-            JSON.stringify({ ok: false, message: 'Internal server error' }),
+        return Response.json(
+            { ok: false, message: 'Internal server error' },
             { status: 500 }
         )
     }

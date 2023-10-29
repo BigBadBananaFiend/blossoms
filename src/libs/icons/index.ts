@@ -1,3 +1,5 @@
 export * from './Email'
 export * from './Password'
 export * from './Visibility'
+export * from './ArrowDown'
+export * from './Check'

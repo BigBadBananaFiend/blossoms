@@ -12,8 +12,8 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         if (!isBodyValid(body)) {
-            return new Response(
-                JSON.stringify({ ok: false, message: 'Bad request' }),
+            return Response.json(
+                { ok: false, message: 'Bad request' },
                 { status: 400 }
             )
         }
@@ -27,8 +27,8 @@ export async function POST(req: Request) {
                 },
             })
         ) {
-            return new Response(
-                JSON.stringify({ ok: false, message: 'User already exists' }),
+            return Response.json(
+                { ok: false, message: 'User already exists' },
                 { status: 400 }
             )
         }
@@ -47,18 +47,16 @@ export async function POST(req: Request) {
         const token = jwt.sign({ email, id: user.id }, 'token')
         cookies().set('token', token, { httpOnly: true })
 
-        // TODO: Secure can not be false on prod
-        return new Response(
-            JSON.stringify({ ok: true, message: 'User created' }),
+        return Response.json(
+            { ok: true, message: 'User created' },
             {
                 status: 200,
             }
         )
     } catch (e) {
-        // TODO: Do not log on prod
         console.error(e)
-        return new Response(
-            JSON.stringify({ ok: false, message: 'Internal server error' }),
+        return Response.json(
+            { ok: false, message: 'Internal server error' },
             { status: 500 }
         )
     }

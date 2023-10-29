@@ -1,3 +1,5 @@
+import { OnboardingForm } from '@/src/modules/onboarding/components/form'
+
 export default function Onboarding() {
-    return <h1>Onboarding</h1>
+    return <OnboardingForm />
 }
