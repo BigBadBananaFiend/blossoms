@@ -26,7 +26,7 @@ const fetcher = async ({ ios }: IFetchParams) => {
     return await result.json()
 }
 
-export const useCities = (
+export const useCitiesQuery = (
     params: IFetchParams,
     options?: UseQueryOptions
 ): UseQueryResult<IResponse, Error> => {

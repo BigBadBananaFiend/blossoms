@@ -1,6 +1,6 @@
 'use client'
 
-import { useCountries } from '@/src/core/api/useCountriesQuery'
+import { useCountriesQuery } from '@/src/core/api/useCountriesQuery'
 import { Input } from '@/src/libs/ui'
 import { Select } from '@/src/libs/ui/select/Select'
 import { SelectGroup } from '@/src/libs/ui/select/SelectGroup'

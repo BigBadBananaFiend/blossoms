@@ -1,5 +1,5 @@
-import { useCities } from '@/src/core/api/useCititesQuery'
-import { useCountries } from '@/src/core/api/useCountriesQuery'
+import { useCitiesQuery } from '@/src/core/api/useCititesQuery'
+import { useCountriesQuery } from '@/src/core/api/useCountriesQuery'
 import { Select } from '@/src/libs/ui/select/Select'
 import { SelectItem } from '@/src/libs/ui/select/SelectItem'
 import { FC, useEffect, useState } from 'react'
@@ -11,12 +11,13 @@ export const CountrySelect: FC = () => {
     const [country, setCountry] = useState<string>('')
     const [city, setCity] = useState<string>('')
 
-    const { isLoading: areCountriesLoading, data: countries } = useCountries()
+    const { isLoading: areCountriesLoading, data: countries } =
+        useCountriesQuery()
     const {
         isLoading: areCitiesLoading,
         data: cities,
         refetch,
-    } = useCities({
+    } = useCitiesQuery({
         ios: country,
     })
 

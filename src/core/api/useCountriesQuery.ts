@@ -23,7 +23,7 @@ const fetcher = async () => {
     return await result.json()
 }
 
-export const useCountries = (
+export const useCountriesQuery = (
     options?: UseQueryOptions
 ): UseQueryResult<IResponse, Error> => {
     const queryKey = ['countries/list']

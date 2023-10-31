@@ -1,4 +1,4 @@
-import { useCities } from '@/src/core/api/useCititesQuery'
+import { useCitiesQuery } from '@/src/core/api/useCititesQuery'
 import { Select } from '@/src/libs/ui/select/Select'
 import { SelectItem } from '@/src/libs/ui/select/SelectItem'
 import { FC, useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ interface ICitySelect {
 export const CitySelect: FC<ICitySelect> = ({ country }: ICitySelect) => {
     const [city, setCity] = useState('')
 
-    const { isLoading, data, refetch } = useCities({ ios: country })
+    const { isLoading, data, refetch } = useCitiesQuery({ ios: country })
 
     useEffect(() => {
         if (!country) {

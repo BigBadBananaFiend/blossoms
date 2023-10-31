@@ -5,7 +5,6 @@ export const inconsolata = Inconsolata({
     weight: ['400', '500', '600', '700'],
     style: ['normal'],
     variable: '--font-family-body',
-    preload: true,
 })
 
 export const karla = Karla({
@@ -13,5 +12,4 @@ export const karla = Karla({
     weight: ['400'],
     style: ['normal'],
     variable: '--font-family-heading',
-    preload: true,
 })

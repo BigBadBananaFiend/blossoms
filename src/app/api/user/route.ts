@@ -4,8 +4,6 @@ import { verify } from 'jsonwebtoken'
 export async function GET() {
     const token = cookies().get('token')
 
-    console.log(token)
-
     if (!token) {
         return Response.json(
             {

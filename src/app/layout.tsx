@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { inconsolata, karla } from './fonts'
 import { QueryProvider } from '../core/components/providers/query-provider'
-import { AuthLayer } from '../core/components/auth/AuthLayer'
 
 import './globals.css'
 
@@ -18,9 +17,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${karla.variable} ${inconsolata.variable}`}>
-                <QueryProvider>
-                    <AuthLayer>{children}</AuthLayer>
-                </QueryProvider>
+                <QueryProvider>{children}</QueryProvider>
             </body>
         </html>
     )

@@ -1,1 +1,1 @@
-export * from './useIdentityQuery'
+export * from './useUserQuery'
