@@ -7,7 +7,7 @@ import {
     SelectProps,
     Viewport,
 } from '@radix-ui/react-select'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useState } from 'react'
 import { Icons } from '../..'
 import style from './style.module.css'
 
@@ -28,7 +28,8 @@ export const Select: FC<ISelectProps> = ({
     startAndorment,
     ...props
 }: ISelectProps) => {
-    console.log(value)
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+
     return (
         <Root
             value={value}
@@ -36,6 +37,7 @@ export const Select: FC<ISelectProps> = ({
                 onValueChange?.(value)
                 setValue(value)
             }}
+            onOpenChange={() => setIsOpen((open) => !open)}
             {...props}
         >
             <Trigger className={style.trigger}>
@@ -45,7 +47,7 @@ export const Select: FC<ISelectProps> = ({
                 </div>
 
                 <Icon className={style.arrow}>
-                    <Icons.ArrowDown />
+                    {isOpen ? <Icons.ArrowUp /> : <Icons.ArrowDown />}
                 </Icon>
             </Trigger>
             <Content

@@ -46,8 +46,8 @@ export const LocationSelect: FC = () => {
                 setValue={setCity}
                 valuePlaceholder={'Select city'}
             >
-                {cities?.map((i) => (
-                    <SelectItem value={i.name} itemText={i.name} key={i.id} />
+                {cities?.map((i, index) => (
+                    <SelectItem value={i.name} itemText={i.name} key={index} />
                 ))}
             </Select>
         </>

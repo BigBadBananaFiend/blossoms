@@ -22,6 +22,7 @@
     width: var(--radix-select-trigger-width);
     background-color: var(--color-black);
     height: 250px;
+    z-index: var(--z-index-select-content);
 }
 
 .item {
