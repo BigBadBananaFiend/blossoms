@@ -20,6 +20,13 @@
 
     --line-height-body: 1.65;
     --line-height-heading: 1.15;
+
+    --z-index-input-label: 1;
+    --z-index-input-text: 2;
+
+    --heigh-input: 50px;
+
+    --padding-input: 8px 12px;
 }
 
 * {

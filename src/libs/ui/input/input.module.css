@@ -10,7 +10,8 @@
     border-color: var(--color-white);
     border-radius: 4px;
     width: 100%;
-    padding: 8px 12px;
+    padding: var(--padding-input);
+    heigh: var(--heigh-input);
 }
 
 .message-content {
@@ -32,11 +33,8 @@
 
 .input {
     width: 100%;
-}
-
-.email-icon {
-    fill: var(--color-white);
-    width: 18px;
+    position: relative;
+    z-index: var(--z-index-input-text);
 }
 
 .andornment {
@@ -67,6 +65,7 @@
     padding: 0px 4px;
     height: 100%;
     transition: transform 0.2s ease;
+    z-index: var(--z-index-input-label);
 }
 
 .elevated {

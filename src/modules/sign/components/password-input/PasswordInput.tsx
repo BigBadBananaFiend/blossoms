@@ -1,5 +1,5 @@
-import { PasswordIcon } from '@/src/libs/icons/Password'
-import { VisibilityIcon, VisibilityOffIcon } from '@/src/libs/icons/Visibility'
+import { Password } from '@/src/libs/icons/Password'
+import { VisibilityOn, VisibilityOff } from '@/src/libs/icons/Visibility'
 import { IPropsForInput, Input, InputRef } from '@/src/libs/ui/input/Input'
 import { forwardRef, useCallback, useMemo, useState } from 'react'
 
@@ -18,17 +18,17 @@ export const PasswordInput = forwardRef<InputRef, IPropsForInput>(
 
         const endAndornment = useMemo(() => {
             if (isVisible) {
-                return <VisibilityIcon size={20} />
+                return <VisibilityOn size={20} />
             }
 
-            return <VisibilityOffIcon size={20} />
+            return <VisibilityOff size={20} />
         }, [isVisible])
 
         return (
             <Input
                 label="Password"
                 type={type}
-                startAndornment={<PasswordIcon size={20} />}
+                startAndornment={<Password size={20} />}
                 endAndornment={endAndornment}
                 endAndornmentFn={() => switchVisible()}
                 ref={ref}

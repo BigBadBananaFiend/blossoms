@@ -11,7 +11,9 @@ import { FC, ReactNode } from 'react'
 import { Icons } from '../..'
 import style from './style.module.css'
 
-interface ISelectProps extends SelectProps {
+interface ISelectProps extends Omit<SelectProps, 'onValueChange'> {
+    onValueChange?: (value?: string) => void
+    startAndorment?: ReactNode
     valuePlaceholder: string
     children: ReactNode | ReactNode[]
     setValue: (value: string) => void
@@ -23,16 +25,25 @@ export const Select: FC<ISelectProps> = ({
     valuePlaceholder,
     value,
     setValue,
+    startAndorment,
     ...props
 }: ISelectProps) => {
+    console.log(value)
     return (
         <Root
             value={value}
-            onValueChange={(value) => setValue(value)}
+            onValueChange={(value) => {
+                onValueChange?.(value)
+                setValue(value)
+            }}
             {...props}
         >
             <Trigger className={style.trigger}>
-                <Value placeholder={valuePlaceholder} />
+                <div className={style['placeholder-wrapper']}>
+                    <div className={style.andornment}>{startAndorment}</div>
+                    <Value placeholder={valuePlaceholder} />
+                </div>
+
                 <Icon className={style.arrow}>
                     <Icons.ArrowDown />
                 </Icon>

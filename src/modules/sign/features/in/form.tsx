@@ -1,4 +1,4 @@
-import { EmailIcon } from '@/src/libs/icons'
+import { Email } from '@/src/libs/icons'
 import { Input, Button } from '@/src/libs/ui'
 import { Controller, useForm } from 'react-hook-form'
 import { InputWrapper, PasswordInput } from '../../components'
@@ -60,7 +60,7 @@ export const SignInForm = () => {
                             value={value}
                             ref={ref}
                             label={'E-mail'}
-                            startAndornment={<EmailIcon size={20} />}
+                            startAndornment={<Email size={20} />}
                             isCritical={!!errors.email}
                             helperMessage={errors.email?.message}
                         />

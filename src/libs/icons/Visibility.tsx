@@ -1,11 +1,11 @@
 import { FC } from 'react'
 import { IPropsForIcon } from './types'
 
-export const VisibilityIcon: FC<IPropsForIcon> = (props) => (
+export const VisibilityOn: FC<IPropsForIcon> = (props) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={`${props.size}` ?? 20}
-        width={`${props.size}` ?? 20}
+        height={props.size ?? 20}
+        width={props.size ?? 20}
         viewBox="0 -960 960 960"
         fill={props.color ?? 'white'}
         className={props.className}
@@ -14,11 +14,11 @@ export const VisibilityIcon: FC<IPropsForIcon> = (props) => (
     </svg>
 )
 
-export const VisibilityOffIcon: FC<IPropsForIcon> = (props) => (
+export const VisibilityOff: FC<IPropsForIcon> = (props) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        height={`${props.size}` ?? 20}
-        width={`${props.size}` ?? 20}
+        height={props.size ?? 20}
+        width={props.size ?? 20}
         viewBox="0 -960 960 960"
         fill={props.color ?? 'white'}
         className={props.className}

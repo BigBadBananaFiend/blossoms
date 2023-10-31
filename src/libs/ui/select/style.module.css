@@ -57,3 +57,17 @@
     background-color: var(--color-white);
     margin: 15px;
 }
+
+.placeholder-wrapper {
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+
+.andornment {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+}
