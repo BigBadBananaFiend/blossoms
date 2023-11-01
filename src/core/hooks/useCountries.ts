@@ -1,29 +1,53 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useCountriesQuery } from '../api'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ICountry, useCountriesQuery } from '../api'
 
 import Fuse from 'fuse.js'
 import { useDebounce } from './useDebounce'
 
-export const useCountries = (value: string) => {
-    const debouncedTerm = useDebounce(value)
-    const [countries, setCountries] = useState<string[]>([])
+export const useCountries = () => {
+    const [value, setValue] = useState<string>()
+    const debouncedValue = useDebounce(value)
+    const [countries, setCountries] = useState<ICountry[]>([])
 
     const { data, isLoading, isError } = useCountriesQuery()
 
-    useEffect(() => {
+    const filteredData = useMemo(() => {
         if (!data) {
             return
         }
+        const filteredData = new Map<string, ICountry>()
+        data.forEach((c) => filteredData.set(c.name, c))
 
-        if (!debouncedTerm) {
+        return filteredData
+    }, [data])
+
+    useEffect(() => {
+        if (!filteredData) {
+            return
+        }
+
+        if (!debouncedValue) {
             setCountries([])
             return
         }
 
-        const fuse = new Fuse(data, { keys: ['name'] })
+        if (filteredData.has(debouncedValue)) {
+            return
+        }
 
-        setCountries(fuse.search(debouncedTerm).map((c) => c.item.name))
-    }, [data, debouncedTerm])
+        const fuse = new Fuse(Array.from(filteredData.values()), {
+            keys: ['name'],
+        })
+
+        setCountries(fuse.search(debouncedValue).map((c) => c.item))
+    }, [debouncedValue, filteredData])
+
+    const validateCountry = useCallback(() => {
+        if (debouncedValue && !filteredData?.has(debouncedValue)) {
+            return false
+        }
+        return true
+    }, [debouncedValue, filteredData])
 
     return useMemo(
         () => ({
@@ -31,7 +55,10 @@ export const useCountries = (value: string) => {
             isLoading,
             isError,
             countries,
+            value,
+            setValue,
+            validateCountry,
         }),
-        [countries, data, isError, isLoading]
+        [countries, data, isError, isLoading, value, validateCountry]
     )
 }
