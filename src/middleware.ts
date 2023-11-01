@@ -1,34 +1,38 @@
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
-import { IUser } from './core/data/user/user'
-import { API_ROUTES } from './core/routes/api-routes'
 import { APP_ROUTES } from './core/routes/app-routes'
 import {
     getIsOnOnboardingRoute,
     getIsOnSignRoutes,
 } from './core/utils/middleware'
+import { API_ROUTES } from './core/routes/api-routes'
+
+interface IUserDetailResponse {
+    ok: boolean
+    onBoard: boolean
+}
 
 export async function middleware(request: NextRequest) {
-    const cookie = request.cookies.get('token')
-    const url = request.url
+    const token = request.cookies.get('token')
 
-    const result = await fetch(API_ROUTES.user, {
+    const response = await fetch(API_ROUTES.user.auth, {
         headers: {
-            Cookie: `${cookie?.name}=${cookie?.value}`,
+            Cookie: `${token?.name}=${token?.value}`,
         },
     })
 
-    const user = (await result.json()) as IUser
+    const user = (await response.json()) as IUserDetailResponse
 
-    const isOnSignRoutes = getIsOnSignRoutes(url)
-    const isOnOnboardingRoute = getIsOnOnboardingRoute(url)
-
-    if (!user.isVerified && !isOnSignRoutes) {
-        return NextResponse.redirect(new URL(APP_ROUTES.sign.in.path, url))
+    if (!user.ok && !getIsOnSignRoutes(request.url)) {
+        return NextResponse.redirect(
+            new URL(APP_ROUTES.sign.in.path, request.url)
+        )
     }
 
-    if (!user.hasFinishedOnboarding && !isOnOnboardingRoute) {
-        return NextResponse.redirect(new URL(APP_ROUTES.onboarding.path, url))
+    if (!user.onBoard && !getIsOnOnboardingRoute(request.url)) {
+        return NextResponse.redirect(
+            new URL(APP_ROUTES.onboarding.path, request.url)
+        )
     }
 
     return NextResponse.next()

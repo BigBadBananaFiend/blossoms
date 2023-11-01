@@ -13,4 +13,5 @@ model User {
     password String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    onBoard Boolean @default(false)
 }

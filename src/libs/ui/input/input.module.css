@@ -11,7 +11,7 @@
     border-radius: 4px;
     width: 100%;
     padding: var(--padding-input);
-    heigh: var(--heigh-input);
+    height: var(--height-input);
 }
 
 .message-content {

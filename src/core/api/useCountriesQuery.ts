@@ -2,7 +2,7 @@ import { UseQueryOptions, UseQueryResult, useQuery } from 'react-query'
 import { API_ROUTES } from '../routes/api-routes'
 
 // TODO: create shared types folder and move there
-interface ICountry {
+export interface ICountry {
     id: number
     name: string
     iso2: string

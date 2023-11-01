@@ -12,10 +12,7 @@ export async function POST(req: Request) {
         const body = await req.json()
 
         if (!isBodyValid(body)) {
-            return Response.json(
-                { ok: false, message: 'Bad request' },
-                { status: 400 }
-            )
+            return Response.json({ error: 'Bad request' }, { status: 400 })
         }
 
         const { email, password } = body
@@ -28,7 +25,7 @@ export async function POST(req: Request) {
             })
         ) {
             return Response.json(
-                { ok: false, message: 'User already exists' },
+                { error: 'User already exists' },
                 { status: 400 }
             )
         }
@@ -43,12 +40,11 @@ export async function POST(req: Request) {
             },
         })
 
-        // TODO: Add jwt secret
         const token = jwt.sign({ email, id: user.id }, 'token')
         cookies().set('token', token, { httpOnly: true })
 
         return Response.json(
-            { ok: true, message: 'User created' },
+            { userId: user.id },
             {
                 status: 200,
             }
@@ -56,7 +52,7 @@ export async function POST(req: Request) {
     } catch (e) {
         console.error(e)
         return Response.json(
-            { ok: false, message: 'Internal server error' },
+            { error: 'Internal service error' },
             { status: 500 }
         )
     }
