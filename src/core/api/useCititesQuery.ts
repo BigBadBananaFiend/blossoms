@@ -2,7 +2,7 @@ import { UseQueryOptions, UseQueryResult, useQuery } from 'react-query'
 import { API_ROUTES } from '../routes/api-routes'
 
 interface IFetchParams {
-    country: string
+    country?: string
 }
 
 // TODO: create shared types folder and move there
@@ -19,7 +19,7 @@ const fetcher = async ({ country: ios }: IFetchParams) => {
         'X-CSCAPI-KEY',
         'a3pvQzNlc3dSa1l4RVlzVEhtNGh0U1dUWG5rOGNIazNybjlzVVhtYg=='
     )
-    const result = await fetch(API_ROUTES.external.cities(ios), {
+    const result = await fetch(API_ROUTES.external.cities(ios ?? ''), {
         headers,
     })
 

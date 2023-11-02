@@ -3,20 +3,29 @@ import { FC, ReactNode, useCallback, useRef, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useCountries } from '@/src/core/hooks/useCountries'
 import { Input } from '@/src/libs/ui'
 import { ICountry } from '@/src/core/api'
 import Skeleton from 'react-loading-skeleton'
+import { Icons } from '@/src/libs'
 
 import style from './style.module.css'
 
 interface ICountrySelectProps {
-    setCountry: (country: ICountry) => void
+    isLoading: boolean
+    countries: ICountry[]
+    value: string
+    setValue: (value: string) => void
+    resetCity: () => void
 }
 
-export const LocationSelect: FC<ICountrySelectProps> = ({ setCountry }) => {
+export const CountrySelect: FC<ICountrySelectProps> = ({
+    isLoading,
+    countries,
+    value,
+    setValue,
+    resetCity,
+}) => {
     const inputRef = useRef<HTMLInputElement>(null)
-    const { isLoading, countries, value, setValue } = useCountries()
     const [isOpen, setIsOpen] = useState(false)
 
     const handleBlur = useCallback(() => {
@@ -26,7 +35,6 @@ export const LocationSelect: FC<ICountrySelectProps> = ({ setCountry }) => {
 
     const handleSelectCountry = useCallback((country: ICountry) => {
         setValue(country.name)
-        setCountry(country)
         handleBlur()
     }, [])
 
@@ -41,11 +49,13 @@ export const LocationSelect: FC<ICountrySelectProps> = ({ setCountry }) => {
             onBlur={handleBlur}
         >
             <Input
+                startAndornment={<Icons.Globe />}
                 ref={inputRef}
                 label={'Country'}
                 value={value}
                 onChange={(e) => {
-                    setValue(e?.currentTarget.value)
+                    setValue(e?.currentTarget.value ?? '')
+                    resetCity()
                 }}
             />
             {isOpen && countries.length > 0 && (
@@ -58,7 +68,10 @@ export const LocationSelect: FC<ICountrySelectProps> = ({ setCountry }) => {
                         itemContent={(_, country) => (
                             <p
                                 className={style['suggestion-item']}
-                                onClick={() => handleSelectCountry(country)}
+                                onClick={() => {
+                                    handleSelectCountry(country)
+                                    resetCity()
+                                }}
                             >
                                 {country.name}
                             </p>

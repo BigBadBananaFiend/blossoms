@@ -1,22 +1,27 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ICountry, useCountriesQuery } from '../api'
+import {
+    ICountry,
+    useCountriesQuery,
+    useCitiesQuery,
+    ICity,
+} from '../../../core/api'
 
 import Fuse from 'fuse.js'
-import { useDebounce } from './useDebounce'
+import { useDebounce } from '../../../core/hooks/useDebounce'
 
-export const useCountries = () => {
-    const [value, setValue] = useState<string>()
+export const useCitites = (country?: string) => {
+    const [value, setValue] = useState<string>('')
     const debouncedValue = useDebounce(value)
-    const [countries, setCountries] = useState<ICountry[]>([])
+    const [cities, setCities] = useState<ICity[]>([])
 
-    const { data, isLoading, isError } = useCountriesQuery()
+    const { data, isLoading, isError } = useCitiesQuery({ country })
 
     const filteredData = useMemo(() => {
         if (!data) {
             return
         }
-        const filteredData = new Map<string, ICountry>()
-        data.forEach((c) => filteredData.set(c.name, c))
+        const filteredData = new Map<string, ICity>()
+        data?.forEach((c) => filteredData.set(c.name, c))
 
         return filteredData
     }, [data])
@@ -27,7 +32,7 @@ export const useCountries = () => {
         }
 
         if (!debouncedValue) {
-            setCountries([])
+            setCities([])
             return
         }
 
@@ -39,7 +44,7 @@ export const useCountries = () => {
             keys: ['name'],
         })
 
-        setCountries(fuse.search(debouncedValue).map((c) => c.item))
+        setCities(fuse.search(debouncedValue).map((c) => c.item))
     }, [debouncedValue, filteredData])
 
     const validateCountry = useCallback(() => {
@@ -54,11 +59,11 @@ export const useCountries = () => {
             data,
             isLoading,
             isError,
-            countries,
+            cities,
             value,
             setValue,
             validateCountry,
         }),
-        [countries, data, isError, isLoading, value, validateCountry]
+        [data, isLoading, isError, cities, value, validateCountry]
     )
 }
