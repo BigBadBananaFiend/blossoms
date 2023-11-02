@@ -30,7 +30,7 @@ export const useCitites = (countryIso2?: string) => {
         }
 
         if (!debouncedValue) {
-            setCities([])
+            setCities(Array.from(uniqueData.values()))
             return
         }
 
@@ -40,6 +40,7 @@ export const useCitites = (countryIso2?: string) => {
 
         const fuse = new Fuse(Array.from(uniqueData.values()), {
             keys: ['name'],
+            threshold: 0.4,
         })
 
         setCities(fuse.search(debouncedValue).map((c) => c.item))

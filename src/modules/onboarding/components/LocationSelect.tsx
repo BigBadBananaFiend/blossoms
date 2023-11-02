@@ -89,7 +89,7 @@ export const LocationSelect = <T extends ILocation>({
                 isCritical={isCritical}
                 isDisabled={isDisabled}
                 helperMessage={helperMessage}
-                autoComplete={'none'}
+                autoComplete={'off'}
             />
             {isOpen && items.length > 0 && (
                 <div

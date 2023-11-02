@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Input } from '@/src/libs/ui'
-import { FC, FormEvent, useCallback, useState } from 'react'
+import { FC, FormEvent, useCallback, useMemo, useState } from 'react'
 
 import * as Icons from '@/src/libs/icons'
 
@@ -59,9 +59,13 @@ export const OnboardingForm: FC = () => {
     }
 
     return (
-        <form className={style.wrapper} onSubmit={(e) => handleSubmit(e)}>
+        <form
+            autoComplete="off"
+            className={style.wrapper}
+            onSubmit={(e) => handleSubmit(e)}
+        >
             <Input
-                label={'name'}
+                label={'Username'}
                 value={name}
                 onChange={(e) => setName(e?.currentTarget.value ?? '')}
                 startAndornment={<Icons.Name />}

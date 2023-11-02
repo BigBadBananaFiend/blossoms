@@ -37,7 +37,6 @@ export const useOnboardingForm = (props: IUseOnboardingFormProps) => {
     )
 
     const handleValidateName = useCallback((userName: string) => {
-        const test = !userNameRegEx.test(userName)
         if (!userNameRegEx.test(userName)) {
             setFormState((prev) => ({
                 ...prev,

@@ -31,7 +31,7 @@ export interface IPropsForInput {
     isCritical?: boolean
     isDisabled?: boolean
     helperMessage?: string
-    autoComplete?: 'on' | 'none'
+    autoComplete?: 'on' | 'off'
 }
 
 export type InputRef = ElementRef<'input'>
