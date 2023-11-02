@@ -1,30 +1,27 @@
-import { FC, ReactNode, useCallback, useRef, useState } from 'react'
-
-import { Virtuoso } from 'react-virtuoso'
-
-import 'react-loading-skeleton/dist/skeleton.css'
 import { Input } from '@/src/libs/ui'
-import { ICountry } from '@/src/core/api'
+import { ReactNode, useCallback, useRef, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
-import { Icons } from '@/src/libs'
-
+import { Virtuoso } from 'react-virtuoso'
 import style from './style.module.css'
+import { ILocation } from '../types'
 
-interface ICountrySelectProps {
+interface ILocationSelectProps<T extends ILocation> {
+    andornment: ReactNode
+    label: string
     isLoading: boolean
-    countries: ICountry[]
+    items: T[]
     value: string
-    setValue: (value: string) => void
-    resetCity: () => void
+    onChange: (value: string) => void
 }
 
-export const CountrySelect: FC<ICountrySelectProps> = ({
+export const LocationSelect = <T extends ILocation>({
+    andornment,
     isLoading,
-    countries,
+    items,
     value,
-    setValue,
-    resetCity,
-}) => {
+    onChange,
+    label,
+}: ILocationSelectProps<T>) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [isOpen, setIsOpen] = useState(false)
 
@@ -33,8 +30,8 @@ export const CountrySelect: FC<ICountrySelectProps> = ({
         inputRef?.current?.blur()
     }, [])
 
-    const handleSelectCountry = useCallback((country: ICountry) => {
-        setValue(country.name)
+    const handleSelectItem = useCallback((value: T) => {
+        onChange(value.name)
         handleBlur()
     }, [])
 
@@ -49,31 +46,27 @@ export const CountrySelect: FC<ICountrySelectProps> = ({
             onBlur={handleBlur}
         >
             <Input
-                startAndornment={<Icons.Globe />}
+                startAndornment={andornment}
                 ref={inputRef}
-                label={'Country'}
+                label={label}
                 value={value}
                 onChange={(e) => {
-                    setValue(e?.currentTarget.value ?? '')
-                    resetCity()
+                    onChange(e?.currentTarget.value ?? '')
                 }}
             />
-            {isOpen && countries.length > 0 && (
+            {isOpen && items.length > 0 && (
                 <div
                     className={style['suggestion-wrapper']}
                     onMouseDown={(e) => e.preventDefault()}
                 >
                     <Virtuoso
-                        data={countries}
-                        itemContent={(_, country) => (
+                        data={items}
+                        itemContent={(_, item) => (
                             <p
                                 className={style['suggestion-item']}
-                                onClick={() => {
-                                    handleSelectCountry(country)
-                                    resetCity()
-                                }}
+                                onClick={() => handleSelectItem(item)}
                             >
-                                {country.name}
+                                {item.name}
                             </p>
                         )}
                     />

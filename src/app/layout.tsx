@@ -3,6 +3,7 @@ import { inconsolata, karla } from './fonts'
 import { QueryProvider } from '../core/components/providers/query-provider'
 
 import './globals.css'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export const metadata: Metadata = {
     title: 'Blossoms',

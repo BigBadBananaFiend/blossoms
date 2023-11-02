@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ICountry, useCountriesQuery } from '../../../core/api'
+import { useCountriesQuery } from '../api'
 
 import Fuse from 'fuse.js'
 import { useDebounce } from '../../../core/hooks/useDebounce'
+import { ICountry } from '../types'
 
 export const useCountries = () => {
     const [value, setValue] = useState<string>('')

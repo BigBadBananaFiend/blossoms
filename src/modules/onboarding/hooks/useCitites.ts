@@ -1,20 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-    ICountry,
-    useCountriesQuery,
-    useCitiesQuery,
-    ICity,
-} from '../../../core/api'
+import { useCitiesQuery, } from '../api'
 
 import Fuse from 'fuse.js'
 import { useDebounce } from '../../../core/hooks/useDebounce'
+import { ICity } from '../types'
 
-export const useCitites = (country?: string) => {
+export const useCitites = (countryIso2?: string) => {
     const [value, setValue] = useState<string>('')
     const debouncedValue = useDebounce(value)
     const [cities, setCities] = useState<ICity[]>([])
 
-    const { data, isLoading, isError } = useCitiesQuery({ country })
+    const { data, isLoading, isError } = useCitiesQuery({
+        countryIso2,
+    })
 
     const filteredData = useMemo(() => {
         if (!data) {

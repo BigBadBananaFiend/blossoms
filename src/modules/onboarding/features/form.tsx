@@ -1,15 +1,15 @@
 'use client'
 
 import { Input } from '@/src/libs/ui'
-import { FC, useCallback, useState } from 'react'
-import { CountrySelect } from '../components/CountrySelect'
+import { FC, useCallback } from 'react'
 
 import * as Icons from '@/src/libs/icons'
 
 import style from './style.module.css'
 import { useCountries } from '@/src/modules/onboarding/hooks/useCountries'
-import { CitySelect } from '../components/CitySelect'
+import { LocationSelect } from '../components/LocationSelect'
 import { useCitites } from '../hooks/useCitites'
+import Skeleton from 'react-loading-skeleton'
 
 export const OnboardingForm: FC = () => {
     const { isLoading, countries, value, setValue, selectedCountry } =
@@ -22,23 +22,29 @@ export const OnboardingForm: FC = () => {
         setValue: _setValue,
     } = useCitites(selectedCountry?.iso2)
 
-    const handleResetCity = useCallback(() => _setValue(''), [])
+    const handleCountryChange = useCallback((value: string) => {
+        setValue(value)
+        _setValue('')
+    }, [])
 
     return (
         <form className={style.wrapper}>
             <Input label="Name" startAndornment={<Icons.Name />} />
-            <CountrySelect
+            <LocationSelect
+                andornment={<Icons.Globe />}
+                label={'Countries'}
                 isLoading={isLoading}
-                countries={countries}
+                items={countries}
                 value={value}
-                setValue={setValue}
-                resetCity={handleResetCity}
+                onChange={handleCountryChange}
             />
-            <CitySelect
+            <LocationSelect
+                andornment={<Icons.City />}
+                label={'Cities'}
                 isLoading={_isLoading}
-                citites={cities}
+                items={cities}
                 value={_value}
-                setValue={_setValue}
+                onChange={_setValue}
             />
         </form>
     )
