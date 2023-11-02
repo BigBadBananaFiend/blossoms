@@ -21,6 +21,8 @@ export default async function middleware(request: NextRequest) {
         },
     })
 
+    console.log(process.env.TOKEN_SECRET + 'middle')
+
     const user = (await result.json()) as IUserDetailResponse
     const isOnSignRoutes = getIsOnSignRoutes(request.url)
 

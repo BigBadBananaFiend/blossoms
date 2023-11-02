@@ -40,7 +40,10 @@ export async function POST(req: Request) {
             },
         })
 
-        const token = jwt.sign({ email, id: user.id }, 'token')
+        const token = jwt.sign(
+            { email, id: user.id },
+            process.env.TOKEN_SECRET!
+        )
         cookies().set('token', token, { httpOnly: true })
 
         return Response.json(

@@ -15,7 +15,7 @@ export async function GET() {
     }
 
     try {
-        jwt.verify(token, 'token')
+        jwt.verify(token, process.env.TOKEN_SECRET!)
     } catch {
         return Response.json(
             { ok: false, error: 'Access denied' },
