@@ -12,10 +12,18 @@ interface IButtonProps {
     icon?: ReactNode
     variant?: ButtonVariant
     isLoading?: boolean
+    type?: 'button' | 'submit' | 'reset'
 }
 
 export const Button: FC<IButtonProps> = (props: IButtonProps) => {
-    const { onClick, isDisabled, text, isLoading, variant = 'Primary' } = props
+    const {
+        onClick,
+        isDisabled,
+        text,
+        isLoading,
+        variant = 'Primary',
+        type,
+    } = props
 
     const atomicClass = classnames({
         [`${style.main}`]: true,
@@ -27,6 +35,7 @@ export const Button: FC<IButtonProps> = (props: IButtonProps) => {
             disabled={isDisabled}
             className={atomicClass}
             onClick={(e) => (isDisabled ? null : onClick?.(e))}
+            type={type}
         >
             <div className={style['text-wrapper']}>
                 {isLoading ? <ThreeDots /> : text}

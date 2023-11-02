@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useCitiesQuery, } from '../api'
+import { useCitiesQuery } from '../api'
 
 import Fuse from 'fuse.js'
 import { useDebounce } from '../../../core/hooks/useDebounce'
@@ -14,7 +14,7 @@ export const useCitites = (countryIso2?: string) => {
         countryIso2,
     })
 
-    const filteredData = useMemo(() => {
+    const uniqueData = useMemo(() => {
         if (!data) {
             return
         }
@@ -25,7 +25,7 @@ export const useCitites = (countryIso2?: string) => {
     }, [data])
 
     useEffect(() => {
-        if (!filteredData) {
+        if (!uniqueData) {
             return
         }
 
@@ -34,23 +34,23 @@ export const useCitites = (countryIso2?: string) => {
             return
         }
 
-        if (filteredData.has(debouncedValue)) {
+        if (uniqueData.has(debouncedValue)) {
             return
         }
 
-        const fuse = new Fuse(Array.from(filteredData.values()), {
+        const fuse = new Fuse(Array.from(uniqueData.values()), {
             keys: ['name'],
         })
 
         setCities(fuse.search(debouncedValue).map((c) => c.item))
-    }, [debouncedValue, filteredData])
+    }, [debouncedValue, uniqueData])
 
     const validateCountry = useCallback(() => {
-        if (debouncedValue && !filteredData?.has(debouncedValue)) {
+        if (debouncedValue && !uniqueData?.has(debouncedValue)) {
             return false
         }
         return true
-    }, [debouncedValue, filteredData])
+    }, [debouncedValue, uniqueData])
 
     return useMemo(
         () => ({
@@ -61,7 +61,8 @@ export const useCitites = (countryIso2?: string) => {
             value,
             setValue,
             validateCountry,
+            uniqueData,
         }),
-        [data, isLoading, isError, cities, value, validateCountry]
+        [data, isLoading, isError, cities, value, validateCountry, uniqueData]
     )
 }

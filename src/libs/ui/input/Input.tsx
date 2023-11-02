@@ -29,7 +29,9 @@ export interface IPropsForInput {
     endAndornment?: ReactNode
     endAndornmentFn?: () => void
     isCritical?: boolean
+    isDisabled?: boolean
     helperMessage?: string
+    autoComplete?: 'on' | 'none'
 }
 
 export type InputRef = ElementRef<'input'>
@@ -47,7 +49,9 @@ export const Input = forwardRef<InputRef, IPropsForInput>(
             name,
             value,
             isCritical,
+            isDisabled,
             helperMessage,
+            autoComplete = 'on',
         } = props
 
         const [isFocused, setIsFocused] = useState<boolean>(false)
@@ -155,6 +159,8 @@ export const Input = forwardRef<InputRef, IPropsForInput>(
                             {props.label}
                         </label>
                         <input
+                            disabled={isDisabled}
+                            autoComplete={autoComplete}
                             ref={_ref}
                             onBlur={(e) => handleBlur(e)}
                             onFocus={(e) => handleFocus(e)}

@@ -1,7 +1,7 @@
 'use client'
 
-import { Input } from '@/src/libs/ui'
-import { FC, useCallback } from 'react'
+import { Button, Input } from '@/src/libs/ui'
+import { FC, FormEvent, useCallback, useState } from 'react'
 
 import * as Icons from '@/src/libs/icons'
 
@@ -9,43 +9,93 @@ import style from './style.module.css'
 import { useCountries } from '@/src/modules/onboarding/hooks/useCountries'
 import { LocationSelect } from '../components/LocationSelect'
 import { useCitites } from '../hooks/useCitites'
-import Skeleton from 'react-loading-skeleton'
+import { useOnboardingForm } from '../hooks/useOnboardingForm'
 
 export const OnboardingForm: FC = () => {
-    const { isLoading, countries, value, setValue, selectedCountry } =
-        useCountries()
+    const [name, setName] = useState<string>('')
 
     const {
-        isLoading: _isLoading,
+        isLoading: areCountriesLoading,
+        countries,
+        value: country,
+        setValue: setCountry,
+        selectedCountry,
+        uniqueData: uniqueCountries,
+    } = useCountries()
+
+    const {
+        isLoading: areCitiesLoading,
         cities,
-        value: _value,
-        setValue: _setValue,
+        value: city,
+        setValue: setCity,
+        uniqueData: uniqueCities,
     } = useCitites(selectedCountry?.iso2)
 
     const handleCountryChange = useCallback((value: string) => {
-        setValue(value)
-        _setValue('')
+        setCountry(value)
+        setCity('')
     }, [])
 
+    const {
+        formState,
+        handleValidateCity,
+        handleValidateCountry,
+        handleValidateName,
+    } = useOnboardingForm({ countries: uniqueCountries, cities: uniqueCities })
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const isValid =
+            handleValidateCity(city) &&
+            handleValidateCountry(country) &&
+            handleValidateName(name)
+
+        if (isValid) {
+            console.log('VALID')
+        } else {
+            console.log('INVALID')
+        }
+    }
+
     return (
-        <form className={style.wrapper}>
-            <Input label="Name" startAndornment={<Icons.Name />} />
+        <form className={style.wrapper} onSubmit={(e) => handleSubmit(e)}>
+            <Input
+                label={'name'}
+                value={name}
+                onChange={(e) => setName(e?.currentTarget.value ?? '')}
+                startAndornment={<Icons.Name />}
+                onBlur={() => handleValidateName(name)}
+                isCritical={!formState.name.valid}
+            />
             <LocationSelect
+                name={'country'}
                 andornment={<Icons.Globe />}
                 label={'Countries'}
-                isLoading={isLoading}
+                isLoading={areCountriesLoading}
                 items={countries}
-                value={value}
+                value={country}
                 onChange={handleCountryChange}
+                handleValidation={handleValidateCountry}
+                isCritical={!formState.country.valid}
+                isDirty={formState.country.dirty}
             />
             <LocationSelect
+                name={'city'}
                 andornment={<Icons.City />}
                 label={'Cities'}
-                isLoading={_isLoading}
+                isLoading={areCitiesLoading}
                 items={cities}
-                value={_value}
-                onChange={_setValue}
+                value={city}
+                onChange={setCity}
+                handleValidation={handleValidateCity}
+                isCritical={!formState.city.valid}
+                isDirty={formState.city.dirty}
+                isDisabled={
+                    areCountriesLoading || !country || !formState.country.valid
+                }
             />
+            <Button type={'submit'} text="Submit" />
         </form>
     )
 }

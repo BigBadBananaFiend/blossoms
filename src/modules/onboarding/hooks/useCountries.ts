@@ -2,17 +2,18 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCountriesQuery } from '../api'
 
 import Fuse from 'fuse.js'
-import { useDebounce } from '../../../core/hooks/useDebounce'
 import { ICountry } from '../types'
 
 export const useCountries = () => {
     const [value, setValue] = useState<string>('')
-    const debouncedValue = useDebounce(value)
     const [countries, setCountries] = useState<ICountry[]>([])
 
-    const { data, isLoading, isError } = useCountriesQuery()
+    const { data, isLoading, isError } = useCountriesQuery({
+        refetchOnWindowFocus: false,
+        staleTime: 100 * 10000,
+    })
 
-    const filteredData = useMemo(() => {
+    const uniqueData = useMemo(() => {
         if (!data) {
             return
         }
@@ -23,37 +24,37 @@ export const useCountries = () => {
     }, [data])
 
     const selectedCountry = useMemo(
-        () => filteredData?.get(value),
-        [filteredData, value]
+        () => uniqueData?.get(value),
+        [uniqueData, value]
     )
 
     useEffect(() => {
-        if (!filteredData) {
+        if (!uniqueData) {
             return
         }
 
-        if (!debouncedValue) {
+        if (!value) {
             setCountries([])
             return
         }
 
-        if (filteredData.has(debouncedValue)) {
+        if (uniqueData.has(value)) {
             return
         }
 
-        const fuse = new Fuse(Array.from(filteredData.values()), {
+        const fuse = new Fuse(Array.from(uniqueData.values()), {
             keys: ['name'],
         })
 
-        setCountries(fuse.search(debouncedValue).map((c) => c.item))
-    }, [debouncedValue, filteredData])
+        setCountries(fuse.search(value).map((c) => c.item))
+    }, [value, uniqueData])
 
     const validateCountry = useCallback(() => {
-        if (debouncedValue && !filteredData?.has(debouncedValue)) {
+        if (value && !uniqueData?.has(value)) {
             return false
         }
         return true
-    }, [debouncedValue, filteredData])
+    }, [value, uniqueData])
 
     return useMemo(
         () => ({
@@ -65,6 +66,7 @@ export const useCountries = () => {
             setValue,
             validateCountry,
             selectedCountry,
+            uniqueData,
         }),
         [
             countries,
@@ -74,6 +76,7 @@ export const useCountries = () => {
             value,
             validateCountry,
             selectedCountry,
+            uniqueData,
         ]
     )
 }
