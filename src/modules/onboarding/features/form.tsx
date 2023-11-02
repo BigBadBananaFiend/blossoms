@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, Input } from '@/src/libs/ui'
-import { FC, FormEvent, useCallback, useMemo, useState } from 'react'
+import { FC, FormEvent, useCallback, useState } from 'react'
 
 import * as Icons from '@/src/libs/icons'
 

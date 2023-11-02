@@ -12,24 +12,38 @@ interface IUserDetailResponse {
     onBoard: boolean
 }
 
-export async function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
     const token = request.cookies.get('token')
 
-    const response = await fetch(API_ROUTES.user.auth, {
+    const result = await fetch(API_ROUTES.user.auth, {
         headers: {
             Cookie: `${token?.name}=${token?.value}`,
         },
     })
 
-    const user = (await response.json()) as IUserDetailResponse
+    const user = (await result.json()) as IUserDetailResponse
+    const isOnSignRoutes = getIsOnSignRoutes(request.url)
 
-    if (!user.ok && !getIsOnSignRoutes(request.url)) {
-        return NextResponse.redirect(
+    if (!user.ok && !isOnSignRoutes) {
+        const response = NextResponse.redirect(
             new URL(APP_ROUTES.sign.in.path, request.url)
         )
+
+        if (token) {
+            response.cookies.delete('token')
+        }
+
+        return response
     }
 
-    if (!user.onBoard && !getIsOnOnboardingRoute(request.url)) {
+    if (!user.ok && isOnSignRoutes && token) {
+        const response = NextResponse.next()
+        response.cookies.delete('token')
+
+        return response
+    }
+
+    if (user.ok && !user.onBoard && !getIsOnOnboardingRoute(request.url)) {
         return NextResponse.redirect(
             new URL(APP_ROUTES.onboarding.path, request.url)
         )

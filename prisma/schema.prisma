@@ -9,9 +9,18 @@ datasource db {
 
 model User {
     id String @id @default(cuid())
-    email String
-    password String
+    email String @unique
+    password String @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     onBoard Boolean @default(false)
+    detail UserDetail?
+}
+
+model UserDetail {
+  name String @unique
+  email String @unique
+  user User? @relation(fields: [email], references: [email])
+  country String
+  city String
 }
