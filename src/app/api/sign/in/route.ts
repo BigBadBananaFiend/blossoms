@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { cookies } from 'next/headers'
-import * as jwt from 'jsonwebtoken'
+import { SignJWT } from 'jose'
 import bcrypt from 'bcrypt'
-import { isBodyValid } from '@/src/core/utils/api/signBodyValidator'
+import { isSignBodyValid } from '@/src/core/utils/api/signBodyValidator'
+import { createSecretKey } from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -10,7 +11,7 @@ export async function POST(req: Request) {
     try {
         const body = await req.json()
 
-        if (!isBodyValid(body)) {
+        if (!isSignBodyValid(body)) {
             return Response.json({ error: 'Bad request' }, { status: 400 })
         }
 
@@ -32,10 +33,14 @@ export async function POST(req: Request) {
             return Response.json({ error: 'Invalid password' }, { status: 401 })
         }
 
-        const token = jwt.sign(
-            { email, id: user.id },
-            process.env.TOKEN_SECRET!
-        )
+        const secret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
+        const token = await new SignJWT({
+            onBoard: false,
+            id: user.id,
+        })
+            .setProtectedHeader({ alg: 'HS256' })
+            .sign(secret)
+
         cookies().set('token', token, { httpOnly: true })
 
         return Response.json(
@@ -45,6 +50,7 @@ export async function POST(req: Request) {
             }
         )
     } catch (e) {
+        console.log(e)
         return Response.json(
             { error: 'Internal service error' },
             { status: 500 }

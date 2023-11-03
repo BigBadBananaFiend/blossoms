@@ -10,6 +10,7 @@ export const API_ROUTES = {
         in: `${BASE_API_URL}/sign/in`,
         up: `${BASE_API_URL}/sign/up`,
     },
+    onboarding: `${BASE_API_URL}/onboarding`,
     external: {
         countries: 'https://api.countrystatecity.in/v1/countries',
         cities: (ios: string) =>

@@ -19,8 +19,8 @@ model User {
 
 model UserDetail {
   name String @unique
-  email String @unique
-  user User? @relation(fields: [email], references: [email])
+  id String @id
+  user User? @relation(fields: [id], references: [id])
   country String
   city String
 }

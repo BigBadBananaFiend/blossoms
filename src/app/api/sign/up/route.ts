@@ -1,17 +1,17 @@
-import { isBodyValid } from '@/src/core/utils/api/signBodyValidator'
+import { isSignBodyValid } from '@/src/core/utils/api/signBodyValidator'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers'
-import * as jwt from 'jsonwebtoken'
+import { createSecretKey } from 'crypto'
+import { SignJWT } from 'jose'
 
-// TODO: Should probably re-use one instance for all endpoints
 const prisma = new PrismaClient()
 
 export async function POST(req: Request) {
     try {
         const body = await req.json()
 
-        if (!isBodyValid(body)) {
+        if (!isSignBodyValid(body)) {
             return Response.json({ error: 'Bad request' }, { status: 400 })
         }
 
@@ -37,13 +37,18 @@ export async function POST(req: Request) {
             data: {
                 email,
                 password: hash,
+                onBoard: false,
             },
         })
 
-        const token = jwt.sign(
-            { email, id: user.id },
-            process.env.TOKEN_SECRET!
-        )
+        const secret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
+        const token = await new SignJWT({
+            onBoard: user.onBoard,
+            id: user.id,
+        })
+            .setProtectedHeader({ alg: 'HS256' })
+            .sign(secret)
+
         cookies().set('token', token, { httpOnly: true })
 
         return Response.json(

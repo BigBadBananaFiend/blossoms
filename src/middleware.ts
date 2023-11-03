@@ -5,53 +5,47 @@ import {
     getIsOnOnboardingRoute,
     getIsOnSignRoutes,
 } from './core/utils/middleware'
-import { API_ROUTES } from './core/routes/api-routes'
-
-interface IUserDetailResponse {
-    ok: boolean
-    onBoard: boolean
-}
+import * as jose from 'jose'
 
 export default async function middleware(request: NextRequest) {
-    const token = request.cookies.get('token')
+    const token = request.cookies.get('token')?.value
+    const secret = new TextEncoder().encode(process.env.TOKEN_SECRET!)
 
-    const result = await fetch(API_ROUTES.user.auth, {
-        headers: {
-            Cookie: `${token?.name}=${token?.value}`,
-        },
-    })
+    if (!token) {
+        if (!getIsOnSignRoutes(request.url)) {
+            return NextResponse.redirect(
+                new URL(APP_ROUTES.sign.in.path, request.url)
+            )
+        }
 
-    console.log(process.env.TOKEN_SECRET + 'middle')
+        return
+    }
 
-    const user = (await result.json()) as IUserDetailResponse
-    const isOnSignRoutes = getIsOnSignRoutes(request.url)
+    try {
+        const { payload } = await jose.jwtVerify(token, secret)
+        const { onBoard } = payload
 
-    if (!user.ok && !isOnSignRoutes) {
+        if (!onBoard && !getIsOnOnboardingRoute(request.url)) {
+            return NextResponse.redirect(
+                new URL(APP_ROUTES.onboarding.path, request.url)
+            )
+        }
+
+        return NextResponse.next()
+    } catch (e) {
+        if (getIsOnSignRoutes(request.url)) {
+            const response = NextResponse.next()
+            response.cookies.delete('token')
+            return response
+        }
+
         const response = NextResponse.redirect(
             new URL(APP_ROUTES.sign.in.path, request.url)
         )
 
-        if (token) {
-            response.cookies.delete('token')
-        }
-
-        return response
-    }
-
-    if (!user.ok && isOnSignRoutes && token) {
-        const response = NextResponse.next()
         response.cookies.delete('token')
-
         return response
     }
-
-    if (user.ok && !user.onBoard && !getIsOnOnboardingRoute(request.url)) {
-        return NextResponse.redirect(
-            new URL(APP_ROUTES.onboarding.path, request.url)
-        )
-    }
-
-    return NextResponse.next()
 }
 
 export const config = {
