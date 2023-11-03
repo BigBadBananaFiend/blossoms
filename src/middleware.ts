@@ -31,6 +31,12 @@ export default async function middleware(request: NextRequest) {
             )
         }
 
+        if (onBoard && getIsOnOnboardingRoute(request.url)) {
+            return NextResponse.redirect(
+                new URL(APP_ROUTES.root.path, request.url)
+            )
+        }
+
         return NextResponse.next()
     } catch (e) {
         if (getIsOnSignRoutes(request.url)) {

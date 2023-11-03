@@ -11,14 +11,14 @@ model User {
     id String @id @default(cuid())
     email String @unique
     password String @unique
+    onBoard Boolean
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    onBoard Boolean @default(false)
     detail UserDetail?
 }
 
 model UserDetail {
-  name String @unique
+  name String
   id String @id
   user User? @relation(fields: [id], references: [id])
   country String

@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { cookies } from 'next/headers'
 import { SignJWT } from 'jose'
 import bcrypt from 'bcrypt'
-import { isSignBodyValid } from '@/src/core/utils/api/signBodyValidator'
+import { isSignBodyValid } from '@/src/core/utils/api/type-guards/sign'
 import { createSecretKey } from 'crypto'
 
 const prisma = new PrismaClient()
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
         const secret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
         const token = await new SignJWT({
-            onBoard: false,
+            onBoard: user.onBoard,
             id: user.id,
         })
             .setProtectedHeader({ alg: 'HS256' })

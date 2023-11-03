@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { ICity, ICountry } from '../types'
+import { useOnboardingMutation } from '../api/useOnboardingMutation'
 
 const userNameRegEx = /^[A-Za-z0-9\s.-]+$/
 
@@ -35,6 +36,8 @@ export const useOnboardingForm = (props: IUseOnboardingFormProps) => {
     const [formState, setFormState] = useState<IOnboardingFormState>(
         DEFAULT_ONBOARDING_FORM_STATE
     )
+
+    const mutation = useOnboardingMutation()
 
     const handleValidateName = useCallback((userName: string) => {
         if (!userNameRegEx.test(userName)) {
@@ -131,12 +134,14 @@ export const useOnboardingForm = (props: IUseOnboardingFormProps) => {
             handleValidateCity,
             handleValidateCountry,
             handleValidateName,
+            mutation,
         }),
         [
             formState,
             handleValidateCity,
             handleValidateCountry,
             handleValidateName,
+            mutation,
         ]
     )
 }

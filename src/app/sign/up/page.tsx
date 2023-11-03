@@ -1,7 +1,7 @@
 'use client'
 
-import { SignUpForm } from '@/src/modules/sign/features/up/form'
+import { SignUp } from '@/src/modules/sign/features/up/up'
 
 export default function Up() {
-    return <SignUpForm />
+    return <SignUp />
 }

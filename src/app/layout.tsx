@@ -4,6 +4,7 @@ import { QueryProvider } from '../core/components/providers/query-provider'
 
 import './globals.css'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { GoogleProvider } from '../core/components/providers/google-provider'
 
 export const metadata: Metadata = {
     title: 'Blossoms',
@@ -18,7 +19,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${karla.variable} ${inconsolata.variable}`}>
-                <QueryProvider>{children}</QueryProvider>
+                <GoogleProvider>
+                    <QueryProvider>{children}</QueryProvider>
+                </GoogleProvider>
             </body>
         </html>
     )

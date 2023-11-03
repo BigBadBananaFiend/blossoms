@@ -10,6 +10,7 @@ import { useCountries } from '@/src/modules/onboarding/hooks/useCountries'
 import { LocationSelect } from '../components/LocationSelect'
 import { useCitites } from '../hooks/useCitites'
 import { useOnboardingForm } from '../hooks/useOnboardingForm'
+import { redirect, useRouter } from 'next/navigation'
 
 export const OnboardingForm: FC = () => {
     const [name, setName] = useState<string>('')
@@ -41,9 +42,12 @@ export const OnboardingForm: FC = () => {
         handleValidateCity,
         handleValidateCountry,
         handleValidateName,
+        mutation,
     } = useOnboardingForm({ countries: uniqueCountries, cities: uniqueCities })
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const router = useRouter()
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         const isValid =
@@ -52,9 +56,16 @@ export const OnboardingForm: FC = () => {
             handleValidateName(name)
 
         if (isValid) {
-            console.log('VALID')
-        } else {
-            console.log('INVALID')
+            try {
+                await mutation.mutateAsync({
+                    name,
+                    country,
+                    city,
+                })
+                router.push('/')
+            } catch (e) {
+                console.error(e)
+            }
         }
     }
 
@@ -99,7 +110,11 @@ export const OnboardingForm: FC = () => {
                     areCountriesLoading || !country || !formState.country.valid
                 }
             />
-            <Button type={'submit'} text="Submit" />
+            <Button
+                type={'submit'}
+                text="Submit"
+                isLoading={mutation.isLoading && !mutation.isError}
+            />
         </form>
     )
 }

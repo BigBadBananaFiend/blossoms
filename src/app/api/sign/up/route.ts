@@ -1,4 +1,4 @@
-import { isSignBodyValid } from '@/src/core/utils/api/signBodyValidator'
+import { isSignBodyValid } from '@/src/core/utils/api/type-guards/sign'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers'
@@ -40,6 +40,8 @@ export async function POST(req: Request) {
                 onBoard: false,
             },
         })
+
+        user.onBoard
 
         const secret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
         const token = await new SignJWT({

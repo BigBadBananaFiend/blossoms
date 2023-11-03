@@ -22,13 +22,9 @@ const fetcher = async (params: IFetchParams) => {
 export const useSignUpMutation = (
     options?: UseMutationOptions<IResponse, Error, IFetchParams>
 ): UseMutationResult<IResponse, Error, IFetchParams, unknown> => {
-    const queryClient = useQueryClient()
     const mutationFn = (params: IFetchParams) => fetcher(params)
 
     return useMutation(mutationFn, {
         ...options,
-        onSuccess: () => {
-            queryClient.invalidateQueries(['user/identity'])
-        },
     })
 }

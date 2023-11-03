@@ -1,12 +1,13 @@
 import { Email } from '@/src/libs/icons'
 import { Input, Button } from '@/src/libs/ui'
 import { Controller, useForm } from 'react-hook-form'
-import { InputWrapper, PasswordInput } from '../../components'
+import { ContentWrapper, PasswordInput } from '../../components'
 import { ISignFormData } from '../../types'
 import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useCallback } from 'react'
 import { useValidateEmail } from '../../hooks/useValidateEmail'
 import { useSignInMutation } from '../../api/useSignIn'
+import { redirect, useRouter } from 'next/navigation'
 
 export const SignInForm = () => {
     const {
@@ -20,7 +21,9 @@ export const SignInForm = () => {
     })
 
     const emailValidation = useValidateEmail()
-    const { isLoading, isError, mutateAsync } = useSignInMutation()
+    const { isLoading, isError, isSuccess, mutateAsync } = useSignInMutation()
+
+    const router = useRouter()
 
     const handleEmailValidation = useCallback(() => {
         if (!dirtyFields.email) {
@@ -33,14 +36,19 @@ export const SignInForm = () => {
 
     const submit = useCallback(
         async (data: ISignFormData) => {
-            await mutateAsync(data)
+            try {
+                await mutateAsync(data)
+                router.push('/')
+            } catch (e) {
+                console.log(e)
+            }
         },
         [mutateAsync]
     )
 
     return (
         <form onSubmit={handleSubmit((data) => submit(data))}>
-            <InputWrapper>
+            <ContentWrapper>
                 <Controller
                     control={control}
                     rules={{
@@ -87,7 +95,7 @@ export const SignInForm = () => {
                     )}
                 />
                 <Button isLoading={isLoading && !isError} text="Submit" />
-            </InputWrapper>
+            </ContentWrapper>
         </form>
     )
 }

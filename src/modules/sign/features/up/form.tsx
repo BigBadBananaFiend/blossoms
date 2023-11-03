@@ -1,13 +1,16 @@
 import { Email } from '@/src/libs/icons'
 import { Input, Button } from '@/src/libs/ui'
 import { Controller, useForm } from 'react-hook-form'
-import { InputWrapper, PasswordInput } from '../../components'
+import { ContentWrapper, PasswordInput } from '../../components'
 import { ISignFormData } from '../../types'
 import { DEFAULT_SIGN_FORM_VALUES } from '../../data'
 import { useValidatePassword } from '../../hooks/useValidatePassword'
 import { useCallback } from 'react'
 import { useValidateEmail } from '../../hooks/useValidateEmail'
 import { useSignUpMutation } from '../../api/useSignUp'
+import { redirect, useRouter } from 'next/navigation'
+
+import { GoogleLogin } from '@react-oauth/google'
 
 export const SignUpForm = () => {
     const {
@@ -23,6 +26,7 @@ export const SignUpForm = () => {
     const passwordValidation = useValidatePassword()
     const emailValidation = useValidateEmail()
     const { isLoading, isError, mutateAsync } = useSignUpMutation()
+    const router = useRouter()
 
     const handleEmailValidation = useCallback(() => {
         if (!dirtyFields.email) {
@@ -46,14 +50,19 @@ export const SignUpForm = () => {
 
     const submit = useCallback(
         async (data: ISignFormData) => {
-            await mutateAsync(data)
+            try {
+                await mutateAsync(data)
+                router.push('/')
+            } catch (e) {
+                console.log(e)
+            }
         },
         [mutateAsync]
     )
 
     return (
         <form onSubmit={handleSubmit((data) => submit(data))}>
-            <InputWrapper>
+            <ContentWrapper>
                 <Controller
                     control={control}
                     rules={{
@@ -103,7 +112,7 @@ export const SignUpForm = () => {
                     )}
                 />
                 <Button isLoading={isLoading && !isError} text="Submit" />
-            </InputWrapper>
+            </ContentWrapper>
         </form>
     )
 }
