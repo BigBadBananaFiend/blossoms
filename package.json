@@ -12,7 +12,6 @@
         "schema": "./prisma/schema.prisma"
     },
     "dependencies": {
-        "@paralleldrive/cuid2": "^2.2.2",
         "@prisma/client": "^5.4.2",
         "@radix-ui/react-popover": "^1.0.7",
         "@radix-ui/react-select": "^2.0.0",

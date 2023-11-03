@@ -2,7 +2,7 @@ import { isGoogleSSOBodyValid } from '@/src/core/utils/api/type-guards/google-ss
 import { PrismaClient, User } from '@prisma/client'
 import { createSecretKey } from 'crypto'
 import { SignJWT } from 'jose'
-import * as jwt from 'jsonwebtoken'
+import * as jose from 'jose'
 import { cookies } from 'next/headers'
 
 /* 
@@ -24,9 +24,8 @@ export async function POST(req: Request) {
 
         const { token } = body
 
-        // TODO: yeah... no
-        // ALSO: having trouble with jose and the decrypting algo here
-        const payload = jwt.decode(token) as { email: string }
+        // TODO: typeguard
+        const payload = jose.decodeJwt(token) as { email: string }
         const { email } = payload
 
         let user: User | null
@@ -37,12 +36,10 @@ export async function POST(req: Request) {
             },
         })
 
-        // TODO: Solve the password problem here
         if (!user) {
             user = await prisma.user.create({
                 data: {
                     email,
-                    password: '',
                     onBoard: false,
                 },
             })

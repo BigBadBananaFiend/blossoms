@@ -27,6 +27,13 @@ export async function POST(req: Request) {
             return Response.json({ error: 'User not found' }, { status: 404 })
         }
 
+        if (!user.password) {
+            return Response.json(
+                { error: 'Internal service error' },
+                { status: 500 }
+            )
+        }
+
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (!isPasswordValid) {
