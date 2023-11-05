@@ -1,4 +1,4 @@
-import { ReactNode, FC, MouseEvent } from 'react'
+import { ReactNode, FC, MouseEvent, useMemo } from 'react'
 import classnames from 'classnames'
 import style from './button.module.css'
 import { ThreeDots } from '../loaders/ThreeDots'
@@ -23,12 +23,27 @@ export const Button: FC<IButtonProps> = (props: IButtonProps) => {
         isLoading,
         variant = 'Primary',
         type,
+        icon,
     } = props
 
     const atomicClass = classnames({
         [`${style.main}`]: true,
         [`${style.primary}`]: variant === 'Primary',
+        [`${style.secondary}`]: variant === 'Secondary',
     })
+
+    const innerContent = useMemo(() => {
+        if (!icon) {
+            return text
+        }
+
+        return (
+            <div className={style['inner-content']}>
+                {icon}
+                {text}
+            </div>
+        )
+    }, [icon, text])
 
     return (
         <button
@@ -38,7 +53,7 @@ export const Button: FC<IButtonProps> = (props: IButtonProps) => {
             type={type}
         >
             <div className={style['text-wrapper']}>
-                {isLoading ? <ThreeDots /> : text}
+                {isLoading ? <ThreeDots /> : innerContent}
             </div>
         </button>
     )

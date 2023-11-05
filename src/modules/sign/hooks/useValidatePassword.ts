@@ -42,7 +42,8 @@ export const useValidatePassword = () => {
                 }
             }
 
-            if (window.zxcvbn(password).score < 3) {
+            if (window.zxcvbn(password).score < 2) {
+                console.log(window.zxcvbn(password).score)
                 return {
                     isValid: false,
                     message: PASSWORD_ERROR_MESSAGES.strength,

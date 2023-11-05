@@ -19,6 +19,7 @@
         "bcrypt": "^5.1.1",
         "classnames": "^2.3.2",
         "fuse.js": "^7.0.0",
+        "google-auth-library": "^9.2.0",
         "jose": "^5.0.2",
         "jotai": "^2.5.0",
         "jsonwebtoken": "^9.0.2",

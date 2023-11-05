@@ -1,7 +1,7 @@
 'use client'
 
-import { SignInForm } from '@/src/modules/sign/features/in/form'
+import { SignIn } from '@/src/modules/sign/features/in/in'
 
 export default function In() {
-    return <SignInForm />
+    return <SignIn />
 }

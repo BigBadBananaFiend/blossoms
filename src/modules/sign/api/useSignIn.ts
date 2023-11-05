@@ -1,11 +1,6 @@
 import { ISignFormData, ISignInUpResponse } from '../types'
 import { API_ROUTES } from '@/src/core/routes/api-routes'
-import {
-    UseMutationOptions,
-    UseMutationResult,
-    useMutation,
-    useQueryClient,
-} from 'react-query'
+import { UseMutationOptions, UseMutationResult, useMutation } from 'react-query'
 
 interface IFetchParams extends ISignFormData {}
 interface IResponse extends ISignInUpResponse {}

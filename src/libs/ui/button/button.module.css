@@ -11,6 +11,7 @@
 .primary {
     background-color: var(--color-green);
     color: var(--color-white);
+    font-weight: 600;
 }
 
 .primary:hover,
@@ -28,4 +29,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.secondary {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    font-weight: 600;
+}
+
+.inner-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }

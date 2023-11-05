@@ -1,21 +1,21 @@
 import { FC } from 'react'
-import { SignUpForm } from './form'
-import { SignWithGoogle } from '../../components/google/SignWithGoogle'
+import { SignInForm } from './form'
 
 import style from '../style.module.css'
 import { useGoogleAuthMutation } from '../../api/useGoogleAuth'
+import { SignWithGoogle } from '../../components'
 import { SignFormSkeleton } from '../../components/skeleton/Skeleton'
 
-export const SignUp: FC = () => {
+export const SignIn: FC = () => {
     const { isLoading, mutateAsync } = useGoogleAuthMutation()
 
     if (isLoading) {
-        return <SignFormSkeleton />
+        ;<SignFormSkeleton />
     }
 
     return (
         <div className={style.wrapper}>
-            <SignUpForm />
+            <SignInForm />
             <SignWithGoogle mutateAsync={mutateAsync} />
         </div>
     )

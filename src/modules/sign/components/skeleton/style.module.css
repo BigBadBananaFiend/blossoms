@@ -1,0 +1,16 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    gap: 20px;
+}
+
+.input-skeleton {
+    --base-color: #fbfafa;
+    --highlight-color: #969696;
+    height: 45px;
+}
+
+.headline-skeleton {
+    height: calc(18px * 1.15);
+}

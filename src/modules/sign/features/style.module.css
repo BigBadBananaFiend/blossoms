@@ -1,4 +1,10 @@
-.input-wrapper {
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form {
     display: flex;
     flex-direction: column;
     margin-top: 40px;

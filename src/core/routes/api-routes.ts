@@ -9,6 +9,9 @@ export const API_ROUTES = {
     sign: {
         in: `${BASE_API_URL}/sign/in`,
         up: `${BASE_API_URL}/sign/up`,
+        sso: {
+            google: `${BASE_API_URL}/sign/sso/google`
+        }
     },
     onboarding: `${BASE_API_URL}/onboarding`,
     external: {
