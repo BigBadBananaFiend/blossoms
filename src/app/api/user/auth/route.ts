@@ -1,54 +1,49 @@
 import { cookies } from 'next/headers'
 import { PrismaClient } from '@prisma/client'
-import * as jwt from 'jsonwebtoken'
+import * as jose from 'jose'
+import { ResponseHandler } from '@/src/core/utils/api/ResponseHandler'
 
 const prisma = new PrismaClient()
+const responseHandler = new ResponseHandler()
 
 export async function GET() {
     const token = cookies().get('token')?.value
+    const secret = new TextEncoder().encode(process.env.TOKEN_SECRET!)
 
     if (!token) {
-        return Response.json(
-            { ok: false, error: 'Access denied' },
-            { status: 403 }
-        )
+        return responseHandler._403()
     }
 
     try {
-        jwt.verify(token, process.env.TOKEN_SECRET!)
-    } catch {
-        return Response.json(
-            { ok: false, error: 'Access denied' },
-            { status: 403 }
-        )
-    }
+        const { payload } = await jose.jwtVerify(token, secret)
+        const { id } = payload
 
-    const decoded = jwt.decode(token) as { email: string; id: string }
+        if (typeof id !== 'string') {
+            return responseHandler._500()
+        }
 
-    const { id } = decoded
+        const info = await prisma.userDetail.findFirst({
+            where: {
+                id,
+            },
+            include: {
+                user: true,
+            },
+        })
 
-    if (!id) {
-        return Response.json(
-            { ok: false, error: 'Internal service error' },
-            { status: 500 }
-        )
-    }
+        if (!info) {
+            return responseHandler._500()
+        }
 
-    const user = await prisma.user.findFirst({
-        where: {
+        const { name, city, country } = info
+
+        return responseHandler._200({
             id,
-        },
-    })
-
-    if (!user) {
-        return Response.json(
-            { ok: false, error: 'User not found' },
-            { status: 404 }
-        )
+            name,
+            city,
+            country,
+        })
+    } catch {
+        return responseHandler._500()
     }
-
-    return Response.json({
-        ok: true,
-        onBoard: user.onBoard,
-    })
 }

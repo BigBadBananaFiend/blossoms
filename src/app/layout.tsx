@@ -11,11 +11,19 @@ export const metadata: Metadata = {
     description: 'Buy, swap, and gift flowers',
 }
 
-export default function RootLayout({
+const getUserInfo = async () => {
+    const result = await fetch('http://dog-api.kinduff.com/api/facts')
+    return result.json()
+}
+
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const userinfo = await getUserInfo()
+    console.log(userinfo)
+
     return (
         <html lang="en">
             <body className={`${karla.variable} ${inconsolata.variable}`}>

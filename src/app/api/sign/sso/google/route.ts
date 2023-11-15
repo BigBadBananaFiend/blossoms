@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import * as jose from 'jose'
 
 import { OAuth2Client } from 'google-auth-library'
+import { ResponseHandler } from '@/src/core/utils/api/ResponseHandler'
 
 const prisma = new PrismaClient()
 const oAuthClient = new OAuth2Client(
@@ -12,6 +13,7 @@ const oAuthClient = new OAuth2Client(
     process.env.GOOGLE_SECRET!,
     'postmessage'
 )
+const responseHandler = new ResponseHandler()
 
 export async function POST(req: Request) {
     const appSecret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
@@ -22,10 +24,7 @@ export async function POST(req: Request) {
         const { id_token } = tokens
 
         if (!id_token) {
-            return Response.json(
-                { ok: false, message: 'Internal service error' },
-                { status: 500 }
-            )
+            return responseHandler._500()
         }
 
         const payload = jose.decodeJwt(id_token) as { email: string }
@@ -57,13 +56,10 @@ export async function POST(req: Request) {
 
         cookies().set('token', newToken, { httpOnly: true })
 
-        return Response.json({ ok: true }, { status: 200 })
+        return responseHandler._200({ userId: user.id })
     } catch (e) {
         console.error(e)
 
-        return Response.json(
-            { ok: false, message: 'Internal service errror' },
-            { status: 500 }
-        )
+        return responseHandler._500()
     }
 }

@@ -5,7 +5,7 @@ import { ReactNode, useMemo } from 'react'
 import style from './layout.module.css'
 import { Captions } from '@/src/modules/sign/components/captions/Captions'
 
-export default function SignLayout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
     const pathname = usePathname()
 
     const isIn = useMemo(() => pathname === '/sign/in', [pathname])

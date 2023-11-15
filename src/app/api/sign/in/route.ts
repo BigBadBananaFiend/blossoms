@@ -4,15 +4,17 @@ import { SignJWT } from 'jose'
 import bcrypt from 'bcrypt'
 import { isSignBodyValid } from '@/src/core/utils/api/type-guards/sign'
 import { createSecretKey } from 'crypto'
+import { ResponseHandler } from '@/src/core/utils/api/ResponseHandler'
 
 const prisma = new PrismaClient()
+const responseHandler = new ResponseHandler()
 
 export async function POST(req: Request) {
     try {
         const body = await req.json()
 
         if (!isSignBodyValid(body)) {
-            return Response.json({ error: 'Bad request' }, { status: 400 })
+            return responseHandler._400()
         }
 
         const { email, password } = body
@@ -21,23 +23,23 @@ export async function POST(req: Request) {
             where: {
                 email,
             },
+            include: {
+                detail: true,
+            },
         })
 
         if (!user) {
-            return Response.json({ error: 'User not found' }, { status: 404 })
+            return responseHandler._404()
         }
 
         if (!user.password) {
-            return Response.json(
-                { error: 'Internal service error' },
-                { status: 500 }
-            )
+            return responseHandler._500()
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if (!isPasswordValid) {
-            return Response.json({ error: 'Invalid password' }, { status: 401 })
+            return responseHandler._401()
         }
 
         const secret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
@@ -50,17 +52,13 @@ export async function POST(req: Request) {
 
         cookies().set('token', token, { httpOnly: true })
 
-        return Response.json(
-            { userId: user.id },
-            {
-                status: 200,
-            }
-        )
+        return responseHandler._200({
+            userId: user.id,
+            city: user.detail?.city,
+            country: user.detail?.country,
+        })
     } catch (e) {
         console.log(e)
-        return Response.json(
-            { error: 'Internal service error' },
-            { status: 500 }
-        )
+        return responseHandler._500()
     }
 }

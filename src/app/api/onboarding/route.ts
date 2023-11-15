@@ -4,33 +4,29 @@ import { getTokenPayload } from '@/src/core/utils/api/type-guards/token'
 import { cookies } from 'next/headers'
 import { createSecretKey } from 'crypto'
 import { SignJWT } from 'jose'
+import { ResponseHandler } from '@/src/core/utils/api/ResponseHandler'
 
 const prisma = new PrismaClient()
+const responseHandler = new ResponseHandler()
 
 export async function POST(req: Request) {
     const token = cookies().get('token')?.value
 
     if (!token) {
-        return Response.json(
-            { ok: false, error: 'Access denied' },
-            { status: 403 }
-        )
+        return responseHandler._403()
     }
 
     try {
         const body = await req.json()
 
         if (!isOnboardingBodyValid(body)) {
-            return Response.json({ error: 'Bad request' }, { status: 400 })
+            return responseHandler._400()
         }
 
         const tokenPayload = await getTokenPayload(token)
 
         if (!tokenPayload) {
-            return Response.json(
-                { ok: false, error: 'Access denied' },
-                { status: 403 }
-            )
+            return responseHandler._403()
         }
 
         const { id } = tokenPayload
@@ -44,7 +40,7 @@ export async function POST(req: Request) {
             },
         })
 
-        await prisma.userDetail.create({
+        const detail = await prisma.userDetail.create({
             data: {
                 ...body,
                 id,
@@ -61,17 +57,13 @@ export async function POST(req: Request) {
 
         cookies().set('token', newToken, { httpOnly: true })
 
-        return Response.json(
-            { userId: id },
-            {
-                status: 200,
-            }
-        )
+        return responseHandler._200({
+            userId: id,
+            city: detail.city,
+            country: detail.country,
+        })
     } catch (e) {
         console.log(e)
-        return Response.json(
-            { error: 'Internal service error' },
-            { status: 500 }
-        )
+        return responseHandler._500()
     }
 }

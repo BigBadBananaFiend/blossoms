@@ -4,15 +4,17 @@ import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers'
 import { createSecretKey } from 'crypto'
 import { SignJWT } from 'jose'
+import { ResponseHandler } from '@/src/core/utils/api/ResponseHandler'
 
 const prisma = new PrismaClient()
+const responseHandler = new ResponseHandler()
 
 export async function POST(req: Request) {
     try {
         const body = await req.json()
 
         if (!isSignBodyValid(body)) {
-            return Response.json({ error: 'Bad request' }, { status: 400 })
+            return responseHandler._400()
         }
 
         const { email, password } = body
@@ -24,10 +26,7 @@ export async function POST(req: Request) {
                 },
             })
         ) {
-            return Response.json(
-                { error: 'User already exists' },
-                { status: 400 }
-            )
+            return responseHandler._400('User already exists')
         }
 
         const salt = await bcrypt.genSalt(10)
@@ -41,8 +40,6 @@ export async function POST(req: Request) {
             },
         })
 
-        user.onBoard
-
         const secret = createSecretKey(process.env.TOKEN_SECRET!, 'utf-8')
         const token = await new SignJWT({
             onBoard: user.onBoard,
@@ -53,17 +50,9 @@ export async function POST(req: Request) {
 
         cookies().set('token', token, { httpOnly: true })
 
-        return Response.json(
-            { userId: user.id },
-            {
-                status: 200,
-            }
-        )
+        return responseHandler._200({ userId: user.id })
     } catch (e) {
         console.error(e)
-        return Response.json(
-            { error: 'Internal service error' },
-            { status: 500 }
-        )
+        return responseHandler._500()
     }
 }

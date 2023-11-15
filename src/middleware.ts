@@ -11,6 +11,9 @@ export default async function middleware(request: NextRequest) {
     const token = request.cookies.get('token')?.value
     const secret = new TextEncoder().encode(process.env.TOKEN_SECRET!)
 
+    const { searchParams } = request.nextUrl
+    console.log(searchParams)
+
     if (!token) {
         if (!getIsOnSignRoutes(request.url)) {
             return NextResponse.redirect(
