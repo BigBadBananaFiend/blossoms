@@ -10,7 +10,7 @@ import { useCountries } from '@/src/modules/onboarding/hooks/useCountries'
 import { LocationSelect } from '../components/LocationSelect'
 import { useCitites } from '../hooks/useCitites'
 import { useOnboardingForm } from '../hooks/useOnboardingForm'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export const OnboardingForm: FC = () => {
     const [name, setName] = useState<string>('')

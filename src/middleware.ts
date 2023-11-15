@@ -5,14 +5,10 @@ import {
     getIsOnOnboardingRoute,
     getIsOnSignRoutes,
 } from './core/utils/middleware'
-import * as jose from 'jose'
+import { getTokenPayload } from './core/utils/api/type-guards/token'
 
 export default async function middleware(request: NextRequest) {
     const token = request.cookies.get('token')?.value
-    const secret = new TextEncoder().encode(process.env.TOKEN_SECRET!)
-
-    const { searchParams } = request.nextUrl
-    console.log(searchParams)
 
     if (!token) {
         if (!getIsOnSignRoutes(request.url)) {
@@ -20,13 +16,19 @@ export default async function middleware(request: NextRequest) {
                 new URL(APP_ROUTES.sign.in.path, request.url)
             )
         }
-
         return
     }
 
     try {
-        const { payload } = await jose.jwtVerify(token, secret)
-        const { onBoard } = payload
+        const tokenPayload = await getTokenPayload(token)
+
+        if (!tokenPayload) {
+            return NextResponse.redirect(
+                new URL(APP_ROUTES.sign.in.path, request.url)
+            )
+        }
+
+        const { onBoard } = tokenPayload
 
         if (!onBoard && !getIsOnOnboardingRoute(request.url)) {
             return NextResponse.redirect(

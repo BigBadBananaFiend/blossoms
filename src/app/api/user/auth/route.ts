@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client'
 import * as jose from 'jose'
 import { ResponseHandler } from '@/src/core/utils/api/ResponseHandler'
 
+// WHAT EVEN IS THIS FOR I DON'T KNOW
+
 const prisma = new PrismaClient()
 const responseHandler = new ResponseHandler()
 

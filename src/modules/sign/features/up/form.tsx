@@ -11,7 +11,6 @@ import { useSignUpMutation } from '../../api/useSignUp'
 import { useRouter } from 'next/navigation'
 
 import style from '../style.module.css'
-import { PasswordStrengthIndicator } from '../../components/password-strength-indicator/PasswordStrengthIndicator'
 
 export const SignUpForm = () => {
     const {
